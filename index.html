@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Critter Care</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f7a4d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Critter Care">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<style>
+  :root{
+    --bg:#f4f6f2; --card:#fff; --line:#e2e7db; --ink:#1a2119; --mute:#5f6b5a; --faint:#93a08d;
+    --green:#1f7a4d; --green-soft:#e3f2e8; --green-deep:#155f3a;
+    --amber:#c9781a; --amber-soft:#fbeeda; --red:#cf3742; --red-soft:#fbe4e5;
+    --shadow:0 1px 2px rgba(20,40,20,.05),0 6px 20px rgba(20,50,25,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#12160f; --card:#1a1f16; --line:#2b3226; --ink:#eef1e9; --mute:#9aa691; --faint:#5f6b56;
+      --green:#43c483; --green-soft:#15291d; --green-deep:#43c483;
+      --amber:#eaa93f; --amber-soft:#2c2211; --red:#f2545b; --red-soft:#301518;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); }
+  }
+  :root[data-theme="light"]{ --bg:#f4f6f2;--card:#fff;--line:#e2e7db;--ink:#1a2119;--mute:#5f6b5a;--faint:#93a08d;
+    --green:#1f7a4d;--green-soft:#e3f2e8;--green-deep:#155f3a;--amber:#c9781a;--amber-soft:#fbeeda;--red:#cf3742;--red-soft:#fbe4e5;
+    --shadow:0 1px 2px rgba(20,40,20,.05),0 6px 20px rgba(20,50,25,.06); }
+  :root[data-theme="dark"]{ --bg:#12160f;--card:#1a1f16;--line:#2b3226;--ink:#eef1e9;--mute:#9aa691;--faint:#5f6b56;
+    --green:#43c483;--green-soft:#15291d;--green-deep:#43c483;--amber:#eaa93f;--amber-soft:#2c2211;--red:#f2545b;--red-soft:#301518;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45;
+    -webkit-font-smoothing:antialiased;padding-bottom:84px}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  header{background:var(--green);color:#fff;padding:calc(env(safe-area-inset-top) + 16px) 18px 16px}
+  .h-top{display:flex;align-items:center;gap:11px}
+  .h-logo{width:34px;height:34px;flex:none}
+  header h1{margin:0;font-size:19px;font-weight:800;letter-spacing:.01em}
+  header .day{margin:12px 0 0;font-size:14px;opacity:.92}
+  .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.28);margin-top:10px;overflow:hidden}
+  .bar > i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .35s ease}
+  .bar-lbl{font-size:13px;opacity:.95;margin-top:7px;font-weight:600}
+
+  main{max-width:640px;margin:0 auto;padding:16px 14px 20px}
+  .grp{margin:20px 2px 9px;font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:800}
+  .grp:first-child{margin-top:8px}
+
+  .task{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+    margin-bottom:11px;overflow:hidden;transition:opacity .2s}
+  .task .row{display:flex;gap:13px;padding:13px}
+  .thumb{width:74px;height:74px;flex:none;border-radius:12px;background:var(--green-soft);
+    display:grid;place-items:center;font-size:34px;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .t-body{flex:1;min-width:0}
+  .t-body h3{margin:0;font-size:16px;line-height:1.25}
+  .qty{display:inline-block;background:var(--amber-soft);color:var(--amber);font-weight:800;font-size:12px;
+    border-radius:99px;padding:2px 9px;margin-left:2px}
+  .when{display:inline-block;background:var(--green-soft);color:var(--green-deep);font-weight:700;font-size:11px;
+    border-radius:99px;padding:2px 8px;margin-left:6px;text-transform:uppercase;letter-spacing:.04em}
+  .t-body p{margin:6px 0 0;font-size:13.5px;color:var(--mute)}
+  .req{color:var(--red);font-weight:700}
+
+  .actions{display:flex;gap:9px;padding:0 13px 13px}
+  .done-btn{flex:1;appearance:none;border:0;border-radius:12px;background:var(--green);color:#fff;
+    font-weight:800;font-size:16px;padding:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .done-btn:active{transform:translateY(1px)}
+  .cam-btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--mute);
+    border-radius:12px;padding:0 16px;font-size:20px;cursor:pointer}
+  .cam-btn.req{border-color:var(--red);color:var(--red)}
+  .cam-in{display:none}
+
+  .task.done{opacity:.62}
+  .task.done .thumb{background:var(--green-soft)}
+  .task.done .done-btn{background:var(--green-soft);color:var(--green-deep)}
+  .stamp{font-size:12px;color:var(--green-deep);font-weight:700;padding:0 13px 12px;display:flex;align-items:center;gap:6px}
+  .hasphoto{font-size:11px;color:var(--amber);font-weight:700}
+
+  /* Dad view */
+  .dad-sum{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:8px}
+  .dad-sum .big{font-size:30px;font-weight:800}
+  .dad-sum .big small{font-size:15px;color:var(--mute);font-weight:600}
+  .drow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:11px 13px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .dot{width:11px;height:11px;border-radius:50%;flex:none}
+  .dot.ok{background:var(--green)} .dot.no{background:var(--red)}
+  .drow .nm{flex:1;min-width:0;font-weight:600;font-size:14.5px}
+  .drow .ts{font-size:12px;color:var(--mute)}
+  .ask{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--green-deep);
+    border-radius:99px;font-size:12px;font-weight:700;padding:6px 11px;cursor:pointer;white-space:nowrap}
+  .ask.sent{background:var(--green-soft);border-color:transparent}
+  .reset{display:block;width:100%;margin-top:16px;appearance:none;border:1px solid var(--line);
+    background:transparent;color:var(--mute);border-radius:12px;padding:12px;font-weight:600;cursor:pointer}
+  .note{background:var(--green-soft);border-radius:12px;padding:13px 15px;font-size:13px;color:var(--green-deep);margin-bottom:14px}
+
+  /* bottom tab bar */
+  .tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);
+    display:flex;padding:8px 8px calc(env(safe-area-inset-bottom) + 8px);z-index:30}
+  .tabbar button{flex:1;appearance:none;border:0;background:transparent;color:var(--faint);
+    font-weight:700;font-size:12px;padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .tabbar button .ic{font-size:21px}
+  .tabbar button[aria-selected="true"]{color:var(--green)}
+  [hidden]{display:none!important}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-top">
+    <svg class="h-logo" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="22" r="11" fill="#fff"/>
+      <circle cx="12" cy="11" r="4.4" fill="#fff"/><circle cx="28" cy="11" r="4.4" fill="#fff"/>
+      <circle cx="6" cy="20" r="3.8" fill="#fff"/><circle cx="34" cy="20" r="3.8" fill="#fff"/>
+    </svg>
+    <h1 id="hTitle">Critter Care</h1>
+  </div>
+  <p class="day" id="dayLine">Today's chores</p>
+  <div class="bar"><i id="barFill" style="width:0%"></i></div>
+  <div class="bar-lbl" id="barLbl">0 of 0 done</div>
+</header>
+
+<main>
+  <div id="view-today"></div>
+  <div id="view-dad" hidden></div>
+</main>
+
+<nav class="tabbar" role="tablist">
+  <button id="tab-today" role="tab" aria-selected="true" type="button"><span class="ic">✅</span>Today</button>
+  <button id="tab-dad" role="tab" aria-selected="false" type="button"><span class="ic">👀</span>Dad's View</button>
+</nav>
+
+<script>
+(function(){
+  var root=document.documentElement;
+
+  // ---- TASK DATA (Leo edits: quantities, instructions, photos) ----
+  var TASKS=[
+    {id:'chick', grp:'Birds', emoji:'🐔', name:'Chickens', when:'AM', qty:'1 coop',
+      note:'Fill the feeder. Dump the waterer, scrub it, refill with CLEAN water. Collect the eggs.'},
+    {id:'ducks', grp:'Birds', emoji:'🦆', name:'Ducks & Geese', when:'AM', qty:'',
+      note:'Feed them. Dump and refill their water — they make it dirty fast.'},
+    {id:'guinea', grp:'Birds', emoji:'🐦', name:'Guinea fowl', when:'AM', qty:'',
+      note:'Scatter feed. Fresh water.'},
+    {id:'beardie', grp:'Reptiles', emoji:'🦎', name:'Bearded dragons', when:'Daily', qty:'',
+      note:'Feed greens/insects. Mist them. Check the heat lamp is ON.'},
+    {id:'iguana', grp:'Reptiles', emoji:'🦖', name:'Iguana', when:'Daily', qty:'',
+      note:'Fresh greens. Clean water. Mist for humidity.'},
+    {id:'fish', grp:'Fish', emoji:'🐠', name:'Tropical fish — CHECK WATER', when:'Daily', qty:'', photoReq:true,
+      note:'Feed one pinch. Look at the water — if it is cloudy or sludgy, do a water change. Snap a photo of the clean tank.'},
+    {id:'cat', grp:'Cat', emoji:'🐱', name:'Cat', when:'AM/PM', qty:'',
+      note:'Feed. Fresh water. Scoop the litter box.'},
+    {id:'trees', grp:'Plants & Yard', emoji:'🌳', name:'Fruit trees', when:'AM', qty:'all trees',
+      note:'Deep-water each tree at the base. Count them so none get skipped.'},
+    {id:'plants', grp:'Plants & Yard', emoji:'🪴', name:'Plants', when:'AM', qty:'',
+      note:'Water the potted plants and the beds.'},
+    {id:'grass', grp:'Plants & Yard', emoji:'🌾', name:'Timothy grass', when:'AM', qty:'',
+      note:'Water thoroughly.'}
+  ];
+
+  // ---- STATE (localStorage, per device — this is the design/prototype version) ----
+  function todayKey(){ return 'cc-'+new Date().toDateString(); }
+  var state=JSON.parse(localStorage.getItem(todayKey())||'{}');
+  var asks=JSON.parse(localStorage.getItem('cc-asks')||'{}');
+  function save(){ localStorage.setItem(todayKey(), JSON.stringify(state)); }
+
+  function fmtTime(iso){ var d=new Date(iso); var h=d.getHours(), m=d.getMinutes();
+    var ap=h>=12?'PM':'AM'; h=h%12||12; return h+':'+(m<10?'0':'')+m+' '+ap; }
+
+  function renderToday(){
+    var el=document.getElementById('view-today'); var html=''; var lastGrp='';
+    TASKS.forEach(function(t){
+      if(t.grp!==lastGrp){ html+='<div class="grp">'+t.grp+'</div>'; lastGrp=t.grp; }
+      var st=state[t.id]; var done=st&&st.done;
+      html+='<div class="task'+(done?' done':'')+'" data-id="'+t.id+'">'+
+        '<div class="row"><div class="thumb">'+(st&&st.photo?'<img src="'+st.photo+'">':t.emoji)+'</div>'+
+        '<div class="t-body"><h3>'+t.name+(t.qty?' <span class="qty">'+t.qty+'</span>':'')+(t.when?'<span class="when">'+t.when+'</span>':'')+'</h3>'+
+        '<p>'+t.note+(t.photoReq?' <span class="req">(photo required)</span>':'')+'</p></div></div>';
+      if(done){
+        html+='<div class="stamp">✓ Done at '+fmtTime(st.at)+(st.photo?' <span class="hasphoto">· photo added</span>':'')+'</div>';
+      } else {
+        html+='<div class="actions">'+
+          '<button class="done-btn" data-act="done" data-id="'+t.id+'">Mark Done</button>'+
+          '<button class="cam-btn'+(t.photoReq?' req':'')+'" data-act="cam" data-id="'+t.id+'" title="Add photo">📷</button>'+
+          '<input class="cam-in" type="file" accept="image/*" capture="environment" data-for="'+t.id+'"></div>';
+      }
+      html+='</div>';
+    });
+    el.innerHTML=html;
+    updateBar();
+  }
+
+  function updateBar(){
+    var done=TASKS.filter(function(t){return state[t.id]&&state[t.id].done;}).length;
+    var pct=TASKS.length?Math.round(done/TASKS.length*100):0;
+    document.getElementById('barFill').style.width=pct+'%';
+    document.getElementById('barLbl').textContent=done+' of '+TASKS.length+' done';
+    var d=new Date();
+    document.getElementById('dayLine').textContent=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+" — today's chores";
+  }
+
+  // event delegation for Today
+  document.getElementById('view-today').addEventListener('click',function(e){
+    var b=e.target.closest('[data-act]'); if(!b)return;
+    var id=b.getAttribute('data-id'); var t=TASKS.find(function(x){return x.id===id;});
+    if(b.getAttribute('data-act')==='cam'){
+      b.parentNode.querySelector('.cam-in[data-for="'+id+'"]').click(); return;
+    }
+    if(b.getAttribute('data-act')==='done'){
+      if(t.photoReq && !(state[id]&&state[id].photo)){
+        alert('This one needs a photo of the clean tank before you mark it done. Tap the 📷 button first.');
+        return;
+      }
+      state[id]=Object.assign({},state[id],{done:true,at:new Date().toISOString()});
+      save(); renderToday();
+    }
+  });
+  document.getElementById('view-today').addEventListener('change',function(e){
+    var inp=e.target.closest('.cam-in'); if(!inp||!inp.files||!inp.files[0])return;
+    var id=inp.getAttribute('data-for'); var fr=new FileReader();
+    fr.onload=function(){ state[id]=Object.assign({},state[id],{photo:fr.result}); save(); renderToday(); };
+    fr.readAsDataURL(inp.files[0]);
+  });
+
+  // ---- Dad's View ----
+  function renderDad(){
+    var el=document.getElementById('view-dad');
+    var done=TASKS.filter(function(t){return state[t.id]&&state[t.id].done;});
+    var missing=TASKS.filter(function(t){return !(state[t.id]&&state[t.id].done);});
+    var html='<div class="note">This is your view from the road. You see what got done and when — and you can ask for a photo of anything.</div>';
+    html+='<div class="dad-sum"><div class="big">'+done.length+'<small> of '+TASKS.length+' done today</small></div></div>';
+    if(missing.length){
+      html+='<div class="grp">Still not done ('+missing.length+')</div>';
+      missing.forEach(function(t){
+        var sent=asks[t.id];
+        html+='<div class="drow"><span class="dot no"></span><span class="nm">'+t.emoji+' '+t.name+'</span>'+
+          '<button class="ask'+(sent?' sent':'')+'" data-ask="'+t.id+'">'+(sent?'Asked ✓':'Ask for photo')+'</button></div>';
+      });
+    }
+    html+='<div class="grp">Done ('+done.length+')</div>';
+    done.forEach(function(t){ var st=state[t.id];
+      html+='<div class="drow"><span class="dot ok"></span><span class="nm">'+t.emoji+' '+t.name+
+        (st.photo?' 📷':'')+'</span><span class="ts">'+fmtTime(st.at)+'</span>'+
+        '<button class="ask'+(asks[t.id]?' sent':'')+'" data-ask="'+t.id+'">'+(asks[t.id]?'Asked ✓':'Ask for photo')+'</button></div>';
+    });
+    html+='<button class="reset" id="resetBtn">Start a new day (clear today)</button>';
+    el.innerHTML=html;
+  }
+  document.getElementById('view-dad').addEventListener('click',function(e){
+    var a=e.target.closest('[data-ask]');
+    if(a){ var id=a.getAttribute('data-ask'); asks[id]=true; localStorage.setItem('cc-asks',JSON.stringify(asks));
+      renderDad(); alert('Sent — the kids will see a "Dad wants a photo of this" flag on that task. (Demo: this is where the real notification goes.)'); return; }
+    if(e.target.id==='resetBtn'){ if(confirm('Clear today and start fresh? (New day resets automatically at midnight too.)')){ state={}; asks={}; save(); localStorage.setItem('cc-asks','{}'); renderToday(); renderDad(); } }
+  });
+
+  // tabs
+  var tabs={'tab-today':'view-today','tab-dad':'view-dad'};
+  Object.keys(tabs).forEach(function(tid){
+    document.getElementById(tid).addEventListener('click',function(){
+      Object.keys(tabs).forEach(function(k){
+        document.getElementById(k).setAttribute('aria-selected', k===tid?'true':'false');
+        document.getElementById(tabs[k]).hidden = (k!==tid);
+      });
+      if(tid==='tab-dad') renderDad();
+      document.querySelector('header').scrollIntoView({block:'start'});
+    });
+  });
+
+  renderToday();
+})();
+</script>
+</body>
+</html>
