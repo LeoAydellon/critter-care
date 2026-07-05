@@ -1,6 +1,6 @@
 {
-  "name":"Critter Care",
-  "short_name":"Critter Care",
+  "name":"Tend",
+  "short_name":"Tend",
   "start_url":"./index.html",
   "display":"standalone",
   "background_color":"#1f7a4d",
