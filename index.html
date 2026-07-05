@@ -162,15 +162,31 @@
   var EMOJIS=['🐔','🦆','🐦','🦎','🦖','🐠','🐱','🐶','🐐','🐰','🪷','⛲','🚰','🌳','🪴','🌾','🌸','🐢','🐝','🦜'];
 
   function loadTasks(){ try{var t=JSON.parse(localStorage.getItem('cc-tasks'));if(Array.isArray(t)&&t.length)return t;}catch(e){} return SEED.slice(); }
-  function saveTasks(){ localStorage.setItem('cc-tasks',JSON.stringify(TASKS)); }
+  function saveTasks(){ try{ localStorage.setItem('cc-tasks',JSON.stringify(TASKS)); return true; }catch(e){ alert('Couldn\'t save — the phone storage is full. Try removing a photo, or use fewer/smaller photos.'); return false; } }
   var TASKS=loadTasks();
 
   function todayKey(){ return 'cc-day-'+new Date().toDateString(); }
   var state=JSON.parse(localStorage.getItem(todayKey())||'{}');
   var asks=JSON.parse(localStorage.getItem('cc-asks')||'{}');
-  function saveState(){ localStorage.setItem(todayKey(),JSON.stringify(state)); }
+  function saveState(){ try{ localStorage.setItem(todayKey(),JSON.stringify(state)); }catch(e){ alert('Couldn\'t save — the phone storage is full. Try a smaller photo.'); } }
   function fmtTime(iso){var d=new Date(iso),h=d.getHours(),m=d.getMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+(m<10?'0':'')+m+' '+ap;}
   function money(n){return '$'+(Math.round(n*100)/100).toFixed(2);}
+  // shrink phone photos before storing (full-size base64 blows past localStorage's ~5MB cap)
+  function resizeImage(file, cb){
+    var fr=new FileReader();
+    fr.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var max=1000, w=img.width, h=img.height;
+        if(w>max||h>max){ if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;} }
+        try{ var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',0.7)); }
+        catch(e){ cb(fr.result); }
+      };
+      img.onerror=function(){ cb(fr.result); };
+      img.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
   function esc(t){return (t==null?'':String(t)).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
   function earnedFor(t){var st=state[t.id];if(!st||!st.done)return 0;if(t.needsPhoto&&!st.photo)return 0;return +t.pay||0;}
 
@@ -212,8 +228,8 @@
     state[id]=Object.assign({},state[id],{done:true,at:new Date().toISOString()});saveState();renderToday();
   });
   document.getElementById('view-today').addEventListener('change',function(e){
-    var inp=e.target.closest('.cam-in');if(!inp||!inp.files||!inp.files[0])return;var id=inp.getAttribute('data-for');var fr=new FileReader();
-    fr.onload=function(){state[id]=Object.assign({},state[id],{photo:fr.result});saveState();renderToday();};fr.readAsDataURL(inp.files[0]);
+    var inp=e.target.closest('.cam-in');if(!inp||!inp.files||!inp.files[0])return;var id=inp.getAttribute('data-for');
+    resizeImage(inp.files[0],function(d){state[id]=Object.assign({},state[id],{photo:d});saveState();renderToday();});
   });
 
   // ---------- Dad's View ----------
@@ -286,7 +302,7 @@
     function drawStrip(){document.getElementById('f-strip').innerHTML=photos.map(function(p,i){return '<div class="pthumb"><img src="'+p+'"><button type="button" data-rm="'+i+'">×</button></div>';}).join('');}
     drawStrip();
     document.getElementById('f-strip').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;photos.splice(+b.getAttribute('data-rm'),1);drawStrip();});
-    document.getElementById('f-photo').addEventListener('change',function(e){[].slice.call(e.target.files).forEach(function(f){var fr=new FileReader();fr.onload=function(){photos.push(fr.result);drawStrip();};fr.readAsDataURL(f);});e.target.value='';});
+    document.getElementById('f-photo').addEventListener('change',function(e){[].slice.call(e.target.files).forEach(function(f){resizeImage(f,function(d){photos.push(d);drawStrip();});});e.target.value='';});
     document.getElementById('cancelBtn').onclick=function(){host.innerHTML='';};
     document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')host.innerHTML='';});
     document.getElementById('saveBtn').onclick=function(){
