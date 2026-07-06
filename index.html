@@ -136,6 +136,7 @@
   .drag-handle{font-size:20px;color:var(--mod-deep,var(--faint));cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;padding:2px 4px;line-height:1;flex:none}
   .mod-block.dragging{opacity:.92;box-shadow:0 12px 34px rgba(0,0,0,.28);position:relative}
   .reorder-hint{font-size:12px;color:var(--faint);margin:-6px 2px 14px;font-style:italic}
+  .icon-btn.mv{font-size:20px;padding:5px 3px}
   .mod-block-head .nm small{display:block;color:var(--mute);font-size:12px}
   .srow{display:flex;align-items:center;gap:10px;padding:10px 13px;border-top:1px solid var(--line)}
   .srow .em{font-size:16px;width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;overflow:hidden;background:var(--bg)}
@@ -486,11 +487,12 @@
     var html='<div class="note">This is where YOU build the list. Make an <b>area</b> (name it anything — "Chicken Yard"), then add each little job inside it. Write EXACTLY how you do it, snap a photo, set what it pays. Only you know the particular way — put it here once.</div>';
     html+='<button class="add-btn" id="addModule">＋ Add an area</button>';
     html+='<div class="io-row"><button class="io-btn" id="backupBtn">⬇︎ Back up my work</button><button class="io-btn" id="restoreBtn">⬆︎ Restore</button></div>';
-    if(MODULES.length>1) html+='<div class="reorder-hint">↕︎ Drag the ⠿ handle on any area to reorder the list.</div>';
+    if(MODULES.length>1) html+='<div class="reorder-hint">↕︎ Tap the 🔼🔽 arrows on any area to move it up or down (or drag the ⠿ handle).</div>';
     MODULES.forEach(function(m){
       var cc=modColor(m);
       html+='<div class="mod-block '+cc+'" data-mid="'+m.id+'"><div class="mod-block-head"><span class="drag-handle" data-drag="'+m.id+'" title="Drag to reorder">⠿</span><span class="em">'+(isImg(m.emoji)?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</span>'+
         '<span class="nm"><b>'+esc(m.name)+'</b><small>'+(m.when?esc(m.when)+' · ':'')+m.subs.length+' task'+(m.subs.length===1?'':'s')+'</small></span>'+
+        '<button class="icon-btn mv" data-mup="'+m.id+'" title="Move up">🔼</button><button class="icon-btn mv" data-mdown="'+m.id+'" title="Move down">🔽</button>'+
         '<button class="icon-btn" data-medit="'+m.id+'">✏️</button><button class="icon-btn" data-mdel="'+m.id+'">🗑️</button></div>';
       m.subs.forEach(function(s){
         html+='<div class="srow"><span class="em">'+(firstImg(s)?'<img src="'+firstImg(s)+'">':'🔹')+'</span>'+
@@ -502,6 +504,14 @@
     el.innerHTML=html;
   }
   function isImg(v){return typeof v==='string'&&v.indexOf('data:')===0;}
+  // move an area up (dir -1) or down (dir +1) in the list — only reorders, never deletes
+  function moveModule(id,dir){
+    var i=MODULES.findIndex(function(m){return m.id===id;}); if(i<0)return;
+    var j=i+dir; if(j<0||j>=MODULES.length)return;
+    var t=MODULES[i]; MODULES[i]=MODULES[j]; MODULES[j]=t;
+    saveModules(); renderSetup(); renderToday();
+  }
+
   // drag-to-reorder area stacks (touch + mouse). Only reorders the MODULES array — never deletes.
   (function(){
     var setupEl=document.getElementById('view-setup'); var drag=null;
@@ -543,6 +553,8 @@
     if(e.target.id==='addModule'){openModuleEditor(null);return;}
     if(e.target.id==='backupBtn'){doBackup();return;}
     if(e.target.id==='restoreBtn'){openRestore();return;}
+    var mu=e.target.closest&&e.target.closest('[data-mup]'); if(mu){moveModule(mu.getAttribute('data-mup'),-1);return;}
+    var md=e.target.closest&&e.target.closest('[data-mdown]'); if(md){moveModule(md.getAttribute('data-mdown'),1);return;}
     if((t=e.target.closest('[data-medit]'))){openModuleEditor(t.getAttribute('data-medit'));return;}
     if((t=e.target.closest('[data-mdel]'))){var m=MODULES.find(function(x){return x.id===t.getAttribute('data-mdel');});
       if(m&&confirm('Delete the whole "'+m.name+'" area and its '+m.subs.length+' task(s)?')){MODULES=MODULES.filter(function(x){return x!==m;});saveModules();renderSetup();renderToday();}return;}
