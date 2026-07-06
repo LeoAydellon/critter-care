@@ -42,19 +42,31 @@
 
   main{max-width:640px;margin:0 auto;padding:16px 14px 20px}
 
+  /* per-area color palette (c0..c7) — theme aware via prefers-color-scheme */
+  .c0{--mod-soft:#fbeeda;--mod-deep:#b06f00} .c1{--mod-soft:#e3f2e8;--mod-deep:#155f3a}
+  .c2{--mod-soft:#e2edfb;--mod-deep:#1c5aa8} .c3{--mod-soft:#efe6fb;--mod-deep:#6b3fb0}
+  .c4{--mod-soft:#fce8dd;--mod-deep:#b0501a} .c5{--mod-soft:#ddf1ee;--mod-deep:#0f7568}
+  .c6{--mod-soft:#fbe4ee;--mod-deep:#b02f6b} .c7{--mod-soft:#fbe4e5;--mod-deep:#b0303a}
+  @media (prefers-color-scheme:dark){
+    .c0{--mod-soft:#2c2211;--mod-deep:#eaa93f} .c1{--mod-soft:#15291d;--mod-deep:#43c483}
+    .c2{--mod-soft:#14202e;--mod-deep:#5aa0ee} .c3{--mod-soft:#211630;--mod-deep:#b58cf0}
+    .c4{--mod-soft:#2e1c12;--mod-deep:#f0925a} .c5{--mod-soft:#122926;--mod-deep:#43c4b0}
+    .c6{--mod-soft:#2e1622;--mod-deep:#f06aa0} .c7{--mod-soft:#301518;--mod-deep:#f2545b}
+  }
+
   /* module section header (Today) */
-  .mod-head{display:flex;align-items:center;gap:11px;margin:22px 2px 10px}
+  .mod-head{display:flex;align-items:center;gap:11px;margin:22px 2px 10px;background:var(--mod-soft,var(--green-soft));border-left:4px solid var(--mod-deep,var(--green));border-radius:12px;padding:9px 12px}
   .mod-head:first-child{margin-top:6px}
-  .mod-em{width:42px;height:42px;flex:none;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;font-size:23px;overflow:hidden}
+  .mod-em{width:42px;height:42px;flex:none;border-radius:12px;background:var(--card);color:var(--mod-deep,var(--green-deep));display:grid;place-items:center;font-size:23px;overflow:hidden}
   .mod-em img{width:100%;height:100%;object-fit:cover}
   .mod-name{flex:1;min-width:0}
-  .mod-name b{font-size:17px;font-weight:800;display:block;line-height:1.2}
-  .mod-name .when{display:inline-block;background:var(--green-soft);color:var(--green-deep);font-weight:700;font-size:10.5px;border-radius:99px;padding:1px 8px;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
-  .mod-prog{font-size:12.5px;font-weight:800;color:var(--faint);white-space:nowrap}
-  .mod-prog.all{color:var(--green)}
+  .mod-name b{font-size:17px;font-weight:800;display:block;line-height:1.2;color:var(--mod-deep,var(--ink))}
+  .mod-name .when{display:inline-block;background:var(--mod-deep,var(--green-deep));color:#fff;font-weight:700;font-size:10.5px;border-radius:99px;padding:1px 8px;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+  .mod-prog{font-size:12.5px;font-weight:800;color:var(--mod-deep,var(--faint));white-space:nowrap;opacity:.9}
+  .mod-prog.all{color:var(--mod-deep,var(--green));opacity:1}
   .grp{margin:20px 2px 9px;font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:800}
 
-  .task{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin:0 0 10px 12px;overflow:hidden;transition:opacity .2s}
+  .task{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--mod-deep,var(--line));border-radius:16px;box-shadow:var(--shadow);margin:0 0 10px 12px;overflow:hidden;transition:opacity .2s}
   .task .row{display:flex;gap:13px;padding:13px}
   .thumb{width:66px;height:66px;flex:none;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;font-size:26px;overflow:hidden}
   .thumb img{width:100%;height:100%;object-fit:cover}
@@ -107,12 +119,12 @@
 
   /* setup */
   .add-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;appearance:none;border:1.5px dashed var(--green);background:transparent;color:var(--green-deep);border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;margin-bottom:14px}
-  .mod-block{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden}
-  .mod-block-head{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--green-soft)}
-  .mod-block-head .em{font-size:22px;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;overflow:hidden}
+  .mod-block{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--mod-deep,var(--line));border-radius:16px;box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden}
+  .mod-block-head{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--mod-soft,var(--green-soft))}
+  .mod-block-head .em{font-size:22px;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;overflow:hidden;background:var(--card)}
   .mod-block-head .em img{width:32px;height:32px;object-fit:cover;border-radius:8px}
   .mod-block-head .nm{flex:1;min-width:0}
-  .mod-block-head .nm b{font-size:15.5px;color:var(--green-deep)}
+  .mod-block-head .nm b{font-size:15.5px;color:var(--mod-deep,var(--green-deep))}
   .mod-block-head .nm small{display:block;color:var(--mute);font-size:12px}
   .srow{display:flex;align-items:center;gap:10px;padding:10px 13px;border-top:1px solid var(--line)}
   .srow .em{font-size:16px;width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;overflow:hidden;background:var(--bg)}
@@ -323,20 +335,23 @@
   function subDone(s){return state[s.id]&&state[s.id].done;}
   function uid(p){return (p||'s')+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36);}
 
+  // stable per-area color (c0..c7) from the area's id/name, so a color follows an area around
+  function modColor(m){var s=String(m&&(m.id||m.name)||'');var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return 'c'+(h%8);}
+
   // ================= Today =================
   function renderToday(){
     var el=document.getElementById('view-today'),html='';
     if(!MODULES.length){ html='<div class="note">Nothing here yet. Go to <b>Setup</b> and add your first area.</div>'; el.innerHTML=html; updateBar(); return; }
     MODULES.forEach(function(m){
-      var doneN=m.subs.filter(subDone).length, tot=m.subs.length;
-      html+='<div class="mod-head"><div class="mod-em">'+(m.emoji&&m.emoji.charAt(0)==='d'&&m.emoji.indexOf('data:')===0?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</div>'+
+      var doneN=m.subs.filter(subDone).length, tot=m.subs.length, cc=modColor(m);
+      html+='<div class="mod-head '+cc+'"><div class="mod-em">'+(m.emoji&&m.emoji.charAt(0)==='d'&&m.emoji.indexOf('data:')===0?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</div>'+
         '<div class="mod-name"><b>'+esc(m.name)+'</b>'+(m.when?'<span class="when">'+esc(m.when)+'</span>':'')+'</div>'+
         '<div class="mod-prog'+(tot&&doneN===tot?' all':'')+'">'+doneN+'/'+tot+'</div></div>';
       if(!tot){ html+='<div class="mod-empty">No sub-tasks yet — add them in Setup.</div>'; }
       m.subs.forEach(function(s){
         var st=state[s.id],done=st&&st.done;
         var refs=(s.photos&&s.photos.length)?s.photos:[];
-        html+='<div class="task'+(done?' done':'')+'"><div class="row"><div class="thumb">'+(st&&st.photo?'<img class="zoom" src="'+st.photo+'">':esc(m.emoji||'🐾'))+'</div>'+
+        html+='<div class="task '+cc+(done?' done':'')+'"><div class="row"><div class="thumb">'+(st&&st.photo?'<img class="zoom" src="'+st.photo+'">':esc(m.emoji||'🐾'))+'</div>'+
           '<div class="t-body"><h3>'+esc(s.name)+(s.pay?'<span class="pay">'+money(s.pay)+'</span>':'')+'</h3>'+
           '<p>'+esc(s.note)+(s.needsPhoto?' <span class="req">(photo to get paid)</span>':'')+'</p>'+
           (refs.length?'<div class="ref-gallery">'+refs.map(function(p){var im=pImg(p),cap=pCap(p);return '<figure class="reffig"><img class="zoom" src="'+esc(im)+'">'+(cap?'<figcaption>'+esc(cap)+'</figcaption>':'')+'</figure>';}).join('')+'</div>':'')+'</div></div>';
@@ -410,7 +425,8 @@
     var html='<div class="note">This is where YOU build the list. Make an <b>area</b> (name it anything — "Chicken Yard"), then add each little job inside it. Write EXACTLY how you do it, snap a photo, set what it pays. Only you know the particular way — put it here once.</div>';
     html+='<button class="add-btn" id="addModule">＋ Add an area</button>';
     MODULES.forEach(function(m){
-      html+='<div class="mod-block"><div class="mod-block-head"><span class="em">'+(isImg(m.emoji)?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</span>'+
+      var cc=modColor(m);
+      html+='<div class="mod-block '+cc+'"><div class="mod-block-head"><span class="em">'+(isImg(m.emoji)?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</span>'+
         '<span class="nm"><b>'+esc(m.name)+'</b><small>'+(m.when?esc(m.when)+' · ':'')+m.subs.length+' task'+(m.subs.length===1?'':'s')+'</small></span>'+
         '<button class="icon-btn" data-medit="'+m.id+'">✏️</button><button class="icon-btn" data-mdel="'+m.id+'">🗑️</button></div>';
       m.subs.forEach(function(s){
