@@ -124,6 +124,9 @@
 
   /* setup */
   .add-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;appearance:none;border:1.5px dashed var(--green);background:transparent;color:var(--green-deep);border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;margin-bottom:14px}
+  .io-row{display:flex;gap:9px;margin-bottom:16px}
+  .io-btn{flex:1;appearance:none;border:1px solid var(--line);background:var(--card);color:var(--green-deep);border-radius:12px;padding:11px;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow)}
+  .io-btn:active{transform:translateY(1px)}
   .mod-block{background:var(--mod-soft,var(--card));border:1px solid var(--line);border-left:6px solid var(--mod-deep,var(--line));border-radius:16px;box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden}
   .mod-block-head{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--mod-soft,var(--green-soft))}
   .mod-block-head .em{font-size:22px;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;overflow:hidden;background:var(--card)}
@@ -305,6 +308,54 @@
     renderToday();
   }
 
+  // ---- Backup / Restore: your work can never be lost ----
+  function backupJSON(){ return JSON.stringify({app:'tend',version:1,exportedAt:new Date().toISOString(),modules:MODULES,state:state,asks:asks},null,0); }
+  function doBackup(){
+    var json=backupJSON(), fname='tend-backup-'+new Date().toISOString().slice(0,10)+'.json';
+    var blob=new Blob([json],{type:'application/json'});
+    try{
+      if(navigator.canShare){ var file=new File([blob],fname,{type:'application/json'});
+        if(navigator.canShare({files:[file]})){ navigator.share({files:[file],title:'Tend backup'}).catch(function(){backupFallback(json,fname,blob);}); return; } }
+    }catch(e){}
+    backupFallback(json,fname,blob);
+  }
+  function backupFallback(json,fname,blob){
+    var url=URL.createObjectURL(blob), host=document.getElementById('modalHost');
+    host.innerHTML='<div class="modal"><div class="sheet"><h2>Backup your work</h2>'+
+      '<p class="sub">Save this somewhere safe — either way works:</p>'+
+      '<a class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-bottom:12px" href="'+url+'" download="'+fname+'">⬇︎ Download backup file</a>'+
+      '<p class="sub">…or tap Copy and paste it into a note or email to yourself:</p>'+
+      '<textarea readonly id="bkText" style="width:100%;min-height:110px;background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px;font-size:12px"></textarea>'+
+      '<div class="sheet-actions"><button class="btn-primary" id="bkCopy">Copy</button><button class="btn-ghost" id="bkClose">Close</button></div></div></div>';
+    document.getElementById('bkText').value=json;
+    document.getElementById('bkCopy').onclick=function(){var t=document.getElementById('bkText');t.select();t.setSelectionRange(0,999999);try{document.execCommand('copy');}catch(e){} if(navigator.clipboard){navigator.clipboard.writeText(json).catch(function(){});} this.textContent='Copied ✓';};
+    document.getElementById('bkClose').onclick=function(){host.innerHTML='';try{URL.revokeObjectURL(url);}catch(e){}};
+  }
+  function openRestore(){
+    var host=document.getElementById('modalHost');
+    host.innerHTML='<div class="modal"><div class="sheet"><h2>Restore from backup</h2>'+
+      '<p class="sub">This replaces everything in the app now with your saved backup.</p>'+
+      '<div class="fld"><label>Pick a backup file</label><input type="file" accept=".json,application/json" id="rsFile"></div>'+
+      '<div class="fld"><label>…or paste backup text</label><textarea id="rsText" placeholder="Paste the backup text here"></textarea></div>'+
+      '<div class="sheet-actions"><button class="btn-primary" id="rsGo">Restore</button><button class="btn-ghost" id="rsCancel">Cancel</button></div></div></div>';
+    document.getElementById('rsCancel').onclick=function(){host.innerHTML='';};
+    document.getElementById('rsFile').onchange=function(){var f=this.files[0];if(!f)return;var fr=new FileReader();fr.onload=function(){document.getElementById('rsText').value=fr.result;};fr.readAsText(f);};
+    document.getElementById('rsGo').onclick=function(){applyRestore(document.getElementById('rsText').value);};
+  }
+  function applyRestore(text){
+    var data; try{data=JSON.parse(text);}catch(e){alert("That doesn't look like a valid backup. Paste the whole backup text, or pick the .json file.");return;}
+    if(!data||!Array.isArray(data.modules)){alert('This backup is missing its areas — nothing was restored.');return;}
+    var when=data.exportedAt?('the backup from '+new Date(data.exportedAt).toLocaleString()):'this backup';
+    if(!confirm('Restore '+data.modules.length+' area(s) from '+when+'?\n\nThis replaces what is in the app now.'))return;
+    MODULES=data.modules;
+    if(data.state&&typeof data.state==='object')state=data.state;
+    if(data.asks&&typeof data.asks==='object')asks=data.asks;
+    saveModules();saveState();saveAsks();
+    document.getElementById('modalHost').innerHTML='';
+    renderSetup();renderToday();
+    alert('Restored ✓ — '+MODULES.length+' area(s) are back.');
+  }
+
   function fmtTime(iso){var d=new Date(iso),h=d.getHours(),m=d.getMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+(m<10?'0':'')+m+' '+ap;}
   function money(n){return '$'+(Math.round(n*100)/100).toFixed(2);}
   function esc(t){return (t==null?'':String(t)).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
@@ -431,6 +482,7 @@
     var el=document.getElementById('view-setup');
     var html='<div class="note">This is where YOU build the list. Make an <b>area</b> (name it anything — "Chicken Yard"), then add each little job inside it. Write EXACTLY how you do it, snap a photo, set what it pays. Only you know the particular way — put it here once.</div>';
     html+='<button class="add-btn" id="addModule">＋ Add an area</button>';
+    html+='<div class="io-row"><button class="io-btn" id="backupBtn">⬇︎ Back up my work</button><button class="io-btn" id="restoreBtn">⬆︎ Restore</button></div>';
     MODULES.forEach(function(m){
       var cc=modColor(m);
       html+='<div class="mod-block '+cc+'"><div class="mod-block-head"><span class="em">'+(isImg(m.emoji)?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</span>'+
@@ -449,6 +501,8 @@
   document.getElementById('view-setup').addEventListener('click',function(e){
     var t;
     if(e.target.id==='addModule'){openModuleEditor(null);return;}
+    if(e.target.id==='backupBtn'){doBackup();return;}
+    if(e.target.id==='restoreBtn'){openRestore();return;}
     if((t=e.target.closest('[data-medit]'))){openModuleEditor(t.getAttribute('data-medit'));return;}
     if((t=e.target.closest('[data-mdel]'))){var m=MODULES.find(function(x){return x.id===t.getAttribute('data-mdel');});
       if(m&&confirm('Delete the whole "'+m.name+'" area and its '+m.subs.length+' task(s)?')){MODULES=MODULES.filter(function(x){return x!==m;});saveModules();renderSetup();renderToday();}return;}
