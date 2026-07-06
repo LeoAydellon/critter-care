@@ -300,7 +300,7 @@
         } else {
           html+='<div class="actions"><button class="done-btn" data-act="done" data-id="'+s.id+'">Mark Done</button>'+
             '<button class="cam-btn'+(s.needsPhoto?' req':'')+'" data-act="cam" data-id="'+s.id+'">📷</button>'+
-            '<input class="cam-in" type="file" accept="image/*" capture="environment" data-for="'+s.id+'"></div>';
+            '<input class="cam-in" type="file" accept="image/*" data-for="'+s.id+'"></div>';
         }
         html+='</div>';
       });
