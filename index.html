@@ -251,19 +251,42 @@
       return order.map(function(g){return byGrp[g];});
     }catch(e){ return null; }
   }
-  function loadModules(){
+  function loadModulesFromLS(){
     try{var m=JSON.parse(localStorage.getItem(LS_KEY));if(Array.isArray(m)&&m.length)return m;}catch(e){}
     var mig=migrateFlat(); if(mig) return mig;
     return JSON.parse(JSON.stringify(SEED));
   }
-  function saveModules(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(MODULES)); return true; }
-    catch(e){ alert('Couldn\'t save — the phone storage is full. Try removing a photo, or use fewer/smaller photos.'); return false; } }
-  var MODULES=loadModules();
-
-  function todayKey(){ return 'cc-day-'+new Date().toDateString(); }
-  var state=JSON.parse(localStorage.getItem(todayKey())||'{}');
-  var asks=JSON.parse(localStorage.getItem('cc-asks')||'{}');
-  function saveState(){ try{ localStorage.setItem(todayKey(),JSON.stringify(state)); }catch(e){ alert('Couldn\'t save — the phone storage is full. Try a smaller photo.'); } }
+  // ---- storage backend: IndexedDB (holds hundreds of MB) with localStorage migration + fallback ----
+  var DB=null;
+  function idbOpen(){return new Promise(function(res,rej){try{var r=indexedDB.open('tend-db',1);
+    r.onupgradeneeded=function(){r.result.createObjectStore('kv');};
+    r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
+  function idbGet(k){return new Promise(function(res){try{var t=DB.transaction('kv','readonly').objectStore('kv').get(k);
+    t.onsuccess=function(){res(t.result);};t.onerror=function(){res(undefined);};}catch(e){res(undefined);}});}
+  function idbSet(k,v){return new Promise(function(res,rej){try{var t=DB.transaction('kv','readwrite').objectStore('kv').put(v,k);
+    t.onsuccess=function(){res(true);};t.onerror=function(){rej(t.error);};}catch(e){rej(e);}});}
+  var MODULES=[], state={}, asks={};
+  function todayKey(){ return 'day-'+new Date().toDateString(); }
+  function saveModules(){
+    if(DB){ idbSet('modules',MODULES).catch(function(){alert('Couldn\'t save — try removing a photo, or use fewer/smaller photos.');}); }
+    else { try{ localStorage.setItem(LS_KEY,JSON.stringify(MODULES)); }catch(e){ alert('Couldn\'t save — the phone storage is full. Try fewer/smaller photos.'); } }
+    return true;
+  }
+  function saveState(){ if(DB){ idbSet(todayKey(),state).catch(function(){}); } else { try{ localStorage.setItem('cc-'+todayKey(),JSON.stringify(state)); }catch(e){} } }
+  function saveAsks(){ if(DB){ idbSet('asks',asks).catch(function(){}); } else { try{ localStorage.setItem('cc-asks',JSON.stringify(asks)); }catch(e){} } }
+  async function boot(){
+    try{ DB=await idbOpen(); }catch(e){ DB=null; }
+    var m = DB ? await idbGet('modules') : null;
+    if(!(Array.isArray(m)&&m.length)){ m=loadModulesFromLS(); if(DB){ try{ await idbSet('modules',m); }catch(e){} } }
+    MODULES=m;
+    var st = DB ? await idbGet(todayKey()) : null;
+    if(st==null){ try{ st=JSON.parse(localStorage.getItem('cc-'+todayKey())||localStorage.getItem('cc-day-'+new Date().toDateString())||'{}'); }catch(e){ st={}; } }
+    state=st||{};
+    var ak = DB ? await idbGet('asks') : null;
+    if(ak==null){ try{ ak=JSON.parse(localStorage.getItem('cc-asks')||'{}'); }catch(e){ ak={}; } }
+    asks=ak||{};
+    renderToday();
+  }
 
   function fmtTime(iso){var d=new Date(iso),h=d.getHours(),m=d.getMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+(m<10?'0':'')+m+' '+ap;}
   function money(n){return '$'+(Math.round(n*100)/100).toFixed(2);}
@@ -282,9 +305,9 @@
     fr.onload=function(){
       var img=new Image();
       img.onload=function(){
-        var max=1000, w=img.width, h=img.height;
+        var max=800, w=img.width, h=img.height;
         if(w>max||h>max){ if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;} }
-        try{ var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',0.7)); }
+        try{ var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',0.6)); }
         catch(e){ cb(fr.result); }
       };
       img.onerror=function(){ cb(fr.result); };
@@ -377,8 +400,8 @@
   }
   document.getElementById('view-dad').addEventListener('click',function(e){
     var a=e.target.closest('[data-ask]');
-    if(a){var id=a.getAttribute('data-ask');asks[id]=true;localStorage.setItem('cc-asks',JSON.stringify(asks));renderDad();alert('Sent — a "Dad wants a photo" flag shows on that task. (Demo: this is where the real notification goes to their phone.)');return;}
-    if(e.target.id==='resetBtn'){if(confirm('Clear today and start fresh?')){state={};asks={};saveState();localStorage.setItem('cc-asks','{}');renderToday();renderDad();}}
+    if(a){var id=a.getAttribute('data-ask');asks[id]=true;saveAsks();renderDad();alert('Sent — a "Dad wants a photo" flag shows on that task. (Demo: this is where the real notification goes to their phone.)');return;}
+    if(e.target.id==='resetBtn'){if(confirm('Clear today and start fresh?')){state={};asks={};saveState();saveAsks();renderToday();renderDad();}}
   });
 
   // ================= Setup =================
@@ -484,7 +507,7 @@
     Object.keys(tabs).forEach(function(k){document.getElementById(k).setAttribute('aria-selected',k===tid?'true':'false');document.getElementById(tabs[k][0]).hidden=(k!==tid);});
     tabs[tid][1]();document.querySelector('header').scrollIntoView({block:'start'});
   });});
-  renderToday();
+  boot();
 })();
 </script>
 </body>
