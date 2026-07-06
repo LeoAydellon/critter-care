@@ -41,21 +41,30 @@
   .pay-pill{background:rgba(255,255,255,.22);border-radius:99px;padding:1px 10px;font-weight:800}
 
   main{max-width:640px;margin:0 auto;padding:16px 14px 20px}
+
+  /* module section header (Today) */
+  .mod-head{display:flex;align-items:center;gap:11px;margin:22px 2px 10px}
+  .mod-head:first-child{margin-top:6px}
+  .mod-em{width:42px;height:42px;flex:none;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;font-size:23px;overflow:hidden}
+  .mod-em img{width:100%;height:100%;object-fit:cover}
+  .mod-name{flex:1;min-width:0}
+  .mod-name b{font-size:17px;font-weight:800;display:block;line-height:1.2}
+  .mod-name .when{display:inline-block;background:var(--green-soft);color:var(--green-deep);font-weight:700;font-size:10.5px;border-radius:99px;padding:1px 8px;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+  .mod-prog{font-size:12.5px;font-weight:800;color:var(--faint);white-space:nowrap}
+  .mod-prog.all{color:var(--green)}
   .grp{margin:20px 2px 9px;font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:800}
-  .grp:first-child{margin-top:8px}
-  .task{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:11px;overflow:hidden;transition:opacity .2s}
+
+  .task{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin:0 0 10px 12px;overflow:hidden;transition:opacity .2s}
   .task .row{display:flex;gap:13px;padding:13px}
-  .thumb{width:74px;height:74px;flex:none;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;font-size:34px;overflow:hidden}
+  .thumb{width:66px;height:66px;flex:none;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;font-size:26px;overflow:hidden}
   .thumb img{width:100%;height:100%;object-fit:cover}
   .t-body{flex:1;min-width:0}
-  .t-body h3{margin:0;font-size:16px;line-height:1.25}
-  .qty{display:inline-block;background:var(--amber-soft);color:var(--amber);font-weight:800;font-size:12px;border-radius:99px;padding:2px 9px;margin-left:2px}
-  .when{display:inline-block;background:var(--green-soft);color:var(--green-deep);font-weight:700;font-size:11px;border-radius:99px;padding:2px 8px;margin-left:6px;text-transform:uppercase;letter-spacing:.04em}
+  .t-body h3{margin:0;font-size:15.5px;line-height:1.25}
   .pay{display:inline-block;color:var(--gold);font-weight:800;font-size:12px;margin-left:6px}
   .t-body p{margin:6px 0 0;font-size:13.5px;color:var(--mute);white-space:pre-wrap}
   .req{color:var(--red);font-weight:700}
   .actions{display:flex;gap:9px;padding:0 13px 13px}
-  .done-btn{flex:1;appearance:none;border:0;border-radius:12px;background:var(--green);color:#fff;font-weight:800;font-size:16px;padding:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .done-btn{flex:1;appearance:none;border:0;border-radius:12px;background:var(--green);color:#fff;font-weight:800;font-size:16px;padding:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
   .done-btn:active{transform:translateY(1px)}
   .cam-btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--mute);border-radius:12px;padding:0 16px;font-size:20px;cursor:pointer}
   .cam-btn.req{border-color:var(--gold);color:var(--gold)}
@@ -65,6 +74,9 @@
   .stamp{font-size:12px;color:var(--green-deep);font-weight:700;padding:0 13px 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .hasphoto{color:var(--gold)}
   .nophoto{color:var(--red)}
+  .t-strip{display:flex;gap:6px;margin-top:9px;overflow-x:auto}
+  .t-strip img{width:52px;height:52px;border-radius:8px;object-fit:cover;flex:none;border:1px solid var(--line)}
+  .mod-empty{margin:0 0 10px 12px;font-size:13px;color:var(--faint);font-style:italic;padding:4px 2px}
 
   .dad-sum{display:flex;gap:10px;margin-bottom:12px}
   .dcard{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow);text-align:center}
@@ -74,7 +86,8 @@
   .drow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px;box-shadow:var(--shadow)}
   .dot{width:11px;height:11px;border-radius:50%;flex:none}
   .dot.ok{background:var(--green)} .dot.no{background:var(--red)} .dot.warn{background:var(--gold)}
-  .drow .nm{flex:1;min-width:0;font-weight:600;font-size:14.5px}
+  .drow .nm{flex:1;min-width:0;font-weight:600;font-size:14px}
+  .drow .nm .mod{color:var(--faint);font-weight:700;font-size:12px}
   .drow .ts{font-size:12px;color:var(--mute)}
   .ask{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--green-deep);border-radius:99px;font-size:12px;font-weight:700;padding:6px 11px;cursor:pointer;white-space:nowrap}
   .ask.sent{background:var(--green-soft);border-color:transparent}
@@ -82,30 +95,39 @@
 
   /* setup */
   .add-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;appearance:none;border:1.5px dashed var(--green);background:transparent;color:var(--green-deep);border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;margin-bottom:14px}
-  .srow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px;box-shadow:var(--shadow)}
-  .srow .em{font-size:24px} .srow .nm{flex:1;min-width:0} .srow .nm b{font-size:14.5px} .srow .nm small{display:block;color:var(--mute);font-size:12px}
-  .icon-btn{appearance:none;border:0;background:transparent;font-size:18px;cursor:pointer;padding:5px 7px;border-radius:8px;color:var(--mute)}
+  .mod-block{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden}
+  .mod-block-head{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--green-soft)}
+  .mod-block-head .em{font-size:22px;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;overflow:hidden}
+  .mod-block-head .em img{width:32px;height:32px;object-fit:cover;border-radius:8px}
+  .mod-block-head .nm{flex:1;min-width:0}
+  .mod-block-head .nm b{font-size:15.5px;color:var(--green-deep)}
+  .mod-block-head .nm small{display:block;color:var(--mute);font-size:12px}
+  .srow{display:flex;align-items:center;gap:10px;padding:10px 13px;border-top:1px solid var(--line)}
+  .srow .em{font-size:16px;width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;overflow:hidden;background:var(--bg)}
+  .srow .em img{width:30px;height:30px;object-fit:cover;border-radius:7px}
+  .srow .nm{flex:1;min-width:0} .srow .nm b{font-size:14px} .srow .nm small{display:block;color:var(--mute);font-size:11.5px}
+  .sub-add{display:flex;align-items:center;gap:7px;width:100%;appearance:none;border:0;border-top:1px dashed var(--line);background:transparent;color:var(--green-deep);padding:11px;font-weight:700;font-size:13.5px;cursor:pointer}
+  .icon-btn{appearance:none;border:0;background:transparent;font-size:17px;cursor:pointer;padding:5px 6px;border-radius:8px;color:var(--mute)}
   .icon-btn:hover{background:var(--bg)}
 
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
   .sheet{background:var(--card);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom) + 20px)}
-  .sheet h2{margin:2px 0 14px;font-size:19px}
+  .sheet h2{margin:2px 0 4px;font-size:19px}
+  .sheet .sub{margin:0 0 14px;color:var(--mute);font-size:13px}
   .fld{margin-bottom:13px} .fld label{display:block;font-size:12.5px;font-weight:700;color:var(--mute);margin-bottom:5px}
   .fld input,.fld textarea,.fld select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:11px 12px;font-size:15px;font-family:inherit}
   .fld textarea{min-height:74px;resize:vertical}
   .two{display:flex;gap:10px} .two>.fld{flex:1}
   .chk{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--ink)}
   .chk input{width:20px;height:20px}
-  .photo-prev{width:100%;height:120px;border-radius:10px;object-fit:cover;margin-top:8px;display:none;border:1px solid var(--line)}
   .photo-strip{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
   .pthumb{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
   .pthumb img{width:100%;height:100%;object-fit:cover}
   .pthumb button{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:15px;line-height:1;cursor:pointer;padding:0}
-  .t-strip{display:flex;gap:6px;margin-top:9px;overflow-x:auto}
-  .t-strip img{width:56px;height:56px;border-radius:8px;object-fit:cover;flex:none;border:1px solid var(--line)}
   .sheet-actions{display:flex;gap:10px;margin-top:8px}
   .btn-primary{flex:1;appearance:none;border:0;background:var(--green);color:#fff;border-radius:12px;padding:14px;font-weight:800;font-size:16px;cursor:pointer}
   .btn-ghost{appearance:none;border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:12px;padding:14px 18px;font-weight:700;cursor:pointer}
+  .btn-danger{appearance:none;border:1px solid var(--red);background:transparent;color:var(--red);border-radius:12px;padding:14px 18px;font-weight:700;cursor:pointer}
 
   .tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:8px 8px calc(env(safe-area-inset-bottom) + 8px);z-index:30}
   .tabbar button{flex:1;appearance:none;border:0;background:transparent;color:var(--faint);font-weight:700;font-size:12px;padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
@@ -142,35 +164,96 @@
 
 <script>
 (function(){
-  // ---------- default seed (Leo edits/adds in Setup) ----------
+  // ================= data model =================
+  // A MODULE is a renamable area ("Chicken Yard"). Each module holds MANY
+  // sub-tasks. Each sub-task has its own instruction, its own photo(s), and
+  // its own checkmark + pay. Leo builds/renames all of it in Setup.
   var SEED=[
-    {id:'chick',grp:'Birds',emoji:'🐔',name:'Chickens',when:'AM',qty:'1 coop',pay:2,needsPhoto:true,note:'Fill the feeder — pour slowly so it doesn\'t spill and spoil. Dump the waterer, scrub it, refill with CLEAN water. Collect the eggs.'},
-    {id:'ducks',grp:'Birds',emoji:'🦆',name:'Ducks & Geese',when:'AM',qty:'',pay:1.5,needsPhoto:false,note:'Feed them. Dump and refill their water — they dirty it fast.'},
-    {id:'guinea',grp:'Birds',emoji:'🐦',name:'Guinea fowl',when:'AM',qty:'',pay:1,needsPhoto:false,note:'Scatter feed. Fresh water.'},
-    {id:'beardie',grp:'Reptiles',emoji:'🦎',name:'Bearded dragons',when:'Daily',qty:'',pay:1.5,needsPhoto:false,note:'Feed greens/insects. Mist them. Check the heat lamp is ON.'},
-    {id:'iguana',grp:'Reptiles',emoji:'🦖',name:'Iguana',when:'Daily',qty:'',pay:1.5,needsPhoto:false,note:'Fresh greens. Clean water. Mist for humidity.'},
-    {id:'fish',grp:'Fish',emoji:'🐠',name:'Tropical fish — CHECK WATER',when:'Daily',qty:'',pay:2,needsPhoto:true,note:'Feed one pinch. Look at the water — if cloudy or sludgy, do a water change. Photo of the CLEAN tank to get paid.'},
-    {id:'cat',grp:'Cat',emoji:'🐱',name:'Cat',when:'AM/PM',qty:'',pay:1.5,needsPhoto:false,note:'Feed. Fresh water. Scoop the litter box.'},
-    {id:'ponds',grp:'Ponds & Water',emoji:'🪷',name:'Tub ponds — fill by hand',when:'Daily',qty:'',pay:2,needsPhoto:true,note:'Fill them every day, but DO NOT just leave the hose running — the chlorine will kill the fish. Stand there, fill it up, top it off, then done. Photo to get paid.'},
-    {id:'fountains',grp:'Ponds & Water',emoji:'⛲',name:'Fountains',when:'Daily',qty:'',pay:1,needsPhoto:false,note:'Fill every day so they don\'t run dry.'},
-    {id:'hoses',grp:'Ponds & Water',emoji:'🚰',name:'Hoses OFF',when:'PM',qty:'',pay:0.5,needsPhoto:false,note:'Walk the yard and make sure EVERY hose is turned off before you go in.'},
-    {id:'trees',grp:'Plants & Yard',emoji:'🌳',name:'Fruit trees',when:'AM',qty:'all trees',pay:2,needsPhoto:false,note:'Deep-water each tree at the base. Count them so none get skipped.'},
-    {id:'plants',grp:'Plants & Yard',emoji:'🪴',name:'Plants',when:'AM',qty:'',pay:1.5,needsPhoto:false,note:'Water the potted plants and the beds.'},
-    {id:'grass',grp:'Plants & Yard',emoji:'🌾',name:'Timothy grass',when:'AM',qty:'',pay:1,needsPhoto:false,note:'Water thoroughly.'}
+    {id:'m-chick',name:'Chicken Yard',emoji:'🐔',when:'AM',subs:[
+      {id:'ck1',name:'Feed',note:'Fill the feeder — pour slowly so it doesn\'t spill and spoil.',pay:1,needsPhoto:false,photos:[]},
+      {id:'ck2',name:'Fresh water',note:'Dump the waterer, scrub it, refill with CLEAN water.',pay:1,needsPhoto:false,photos:[]},
+      {id:'ck3',name:'Collect eggs',note:'Check every nesting box and bring the eggs inside.',pay:1,needsPhoto:true,photos:[]}
+    ]},
+    {id:'m-ducks',name:'Ducks & Geese',emoji:'🦆',when:'AM',subs:[
+      {id:'dk1',name:'Feed & water',note:'Feed them. Dump and refill their water — they dirty it fast.',pay:1.5,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-guinea',name:'Guinea Fowl',emoji:'🐦',when:'AM',subs:[
+      {id:'gn1',name:'Feed & water',note:'Scatter feed. Fresh water.',pay:1,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-poults',name:'Poults (Turkeys)',emoji:'🦃',when:'Daily',subs:[
+      {id:'tk1',name:'Check the food',note:'Look at the feeder — top it off if it\'s low. Photo of where the food is / what the bowls look like.',pay:1,needsPhoto:true,photos:[]},
+      {id:'tk2',name:'Fresh water',note:'Fresh, clean water every single day. Dump the old, refill.',pay:1,needsPhoto:true,photos:[]},
+      {id:'tk3',name:'Count & observe (all 4)',note:'Count them — there should be FOUR. Watch them a minute: are they all up, healthy, friendly, acting normal? If one is off or missing, tell Dad.',pay:1.5,needsPhoto:true,photos:[]}
+    ]},
+    {id:'m-beardie',name:'Bearded Dragons',emoji:'🦎',when:'Daily',subs:[
+      {id:'bd1',name:'Feed',note:'Feed greens and insects.',pay:1,needsPhoto:false,photos:[]},
+      {id:'bd2',name:'Mist & heat check',note:'Mist them. Check the heat lamp is ON.',pay:0.5,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-iguana',name:'Iguana',emoji:'🦖',when:'Daily',subs:[
+      {id:'ig1',name:'Greens & water',note:'Fresh greens. Clean water.',pay:1,needsPhoto:false,photos:[]},
+      {id:'ig2',name:'Mist',note:'Mist for humidity.',pay:0.5,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-fish',name:'Fish Tank',emoji:'🐠',when:'Daily',subs:[
+      {id:'fs1',name:'Feed',note:'One pinch of food — no more.',pay:1,needsPhoto:false,photos:[]},
+      {id:'fs2',name:'Check the water',note:'Look at the water — if cloudy or sludgy, do a water change. Photo of the CLEAN tank to get paid.',pay:2,needsPhoto:true,photos:[]}
+    ]},
+    {id:'m-cat',name:'Cat',emoji:'🐱',when:'AM/PM',subs:[
+      {id:'ct1',name:'Feed & water',note:'Feed. Fresh water.',pay:1,needsPhoto:false,photos:[]},
+      {id:'ct2',name:'Litter box',note:'Scoop the litter box.',pay:1,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-ponds',name:'Tub Ponds',emoji:'🪷',when:'Daily',subs:[
+      {id:'pd1',name:'Fill by hand',note:'Fill every day, but DO NOT leave the hose running — the chlorine will kill the fish. Stand there, fill it, top it off, done. Photo to get paid.',pay:2,needsPhoto:true,photos:[]}
+    ]},
+    {id:'m-fountains',name:'Fountains',emoji:'⛲',when:'Daily',subs:[
+      {id:'ft1',name:'Fill',note:'Fill every day so they don\'t run dry.',pay:1,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-water',name:'Yard Water-Off',emoji:'🚰',when:'PM',subs:[
+      {id:'ho1',name:'All hoses OFF',note:'Walk the yard and make sure EVERY hose is turned off before you go in.',pay:0.5,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-trees',name:'Fruit Trees',emoji:'🌳',when:'AM',subs:[
+      {id:'tr1',name:'Deep water',note:'Deep-water each tree at the base. Count them so none get skipped.',pay:2,needsPhoto:false,photos:[]}
+    ]},
+    {id:'m-plants',name:'Plants & Grass',emoji:'🪴',when:'AM',subs:[
+      {id:'pl1',name:'Water pots & beds',note:'Water the potted plants and the beds.',pay:1,needsPhoto:false,photos:[]},
+      {id:'pl2',name:'Timothy grass',note:'Water thoroughly.',pay:1,needsPhoto:false,photos:[]}
+    ]}
   ];
-  var GROUPS=['Birds','Reptiles','Fish','Cat','Ponds & Water','Plants & Yard','Other'];
-  var EMOJIS=['🐔','🦆','🐦','🦎','🦖','🐠','🐱','🐶','🐐','🐰','🪷','⛲','🚰','🌳','🪴','🌾','🌸','🐢','🐝','🦜'];
+  var EMOJIS=['🐔','🦆','🐦','🦎','🦖','🐠','🐱','🐶','🐐','🐰','🐴','🐷','🪷','⛲','🚰','🌳','🪴','🌾','🌸','🐢','🐝','🦜','🌿','🥕'];
 
-  function loadTasks(){ try{var t=JSON.parse(localStorage.getItem('cc-tasks'));if(Array.isArray(t)&&t.length)return t;}catch(e){} return SEED.slice(); }
-  function saveTasks(){ try{ localStorage.setItem('cc-tasks',JSON.stringify(TASKS)); return true; }catch(e){ alert('Couldn\'t save — the phone storage is full. Try removing a photo, or use fewer/smaller photos.'); return false; } }
-  var TASKS=loadTasks();
+  // ---------- storage (v2 = modules) with migration from old flat list ----------
+  var LS_KEY='tend-modules-v2';
+  function migrateFlat(){
+    try{
+      var old=JSON.parse(localStorage.getItem('cc-tasks'));
+      if(!Array.isArray(old)||!old.length) return null;
+      var byGrp={}, order=[];
+      old.forEach(function(t){
+        var g=t.grp||'Chores';
+        if(!byGrp[g]){byGrp[g]={id:'m-'+(t.id||Math.random()).toString(36).slice(0,6),name:g,emoji:t.emoji||'🐾',when:t.when||'',subs:[]};order.push(g);}
+        byGrp[g].subs.push({id:(t.id||('s'+order.length+'-'+byGrp[g].subs.length)),name:t.name||'Task',note:t.note||'',
+          pay:+t.pay||0,needsPhoto:!!t.needsPhoto,photos:(t.photos&&t.photos.slice())||(t.photo?[t.photo]:[])});
+      });
+      return order.map(function(g){return byGrp[g];});
+    }catch(e){ return null; }
+  }
+  function loadModules(){
+    try{var m=JSON.parse(localStorage.getItem(LS_KEY));if(Array.isArray(m)&&m.length)return m;}catch(e){}
+    var mig=migrateFlat(); if(mig) return mig;
+    return JSON.parse(JSON.stringify(SEED));
+  }
+  function saveModules(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(MODULES)); return true; }
+    catch(e){ alert('Couldn\'t save — the phone storage is full. Try removing a photo, or use fewer/smaller photos.'); return false; } }
+  var MODULES=loadModules();
 
   function todayKey(){ return 'cc-day-'+new Date().toDateString(); }
   var state=JSON.parse(localStorage.getItem(todayKey())||'{}');
   var asks=JSON.parse(localStorage.getItem('cc-asks')||'{}');
   function saveState(){ try{ localStorage.setItem(todayKey(),JSON.stringify(state)); }catch(e){ alert('Couldn\'t save — the phone storage is full. Try a smaller photo.'); } }
+
   function fmtTime(iso){var d=new Date(iso),h=d.getHours(),m=d.getMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+(m<10?'0':'')+m+' '+ap;}
   function money(n){return '$'+(Math.round(n*100)/100).toFixed(2);}
+  function esc(t){return (t==null?'':String(t)).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+
   // shrink phone photos before storing (full-size base64 blows past localStorage's ~5MB cap)
   function resizeImage(file, cb){
     var fr=new FileReader();
@@ -187,43 +270,55 @@
     };
     fr.readAsDataURL(file);
   }
-  function esc(t){return (t==null?'':String(t)).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
-  function earnedFor(t){var st=state[t.id];if(!st||!st.done)return 0;if(t.needsPhoto&&!st.photo)return 0;return +t.pay||0;}
 
-  // ---------- Today ----------
+  // ---------- helpers over the 2-level model ----------
+  function allSubs(){ var out=[]; MODULES.forEach(function(m){m.subs.forEach(function(s){out.push({s:s,m:m});});}); return out; }
+  function findSub(id){ for(var i=0;i<MODULES.length;i++){var m=MODULES[i];for(var j=0;j<m.subs.length;j++){if(m.subs[j].id===id)return {s:m.subs[j],m:m};}} return null; }
+  function earnedFor(s){var st=state[s.id];if(!st||!st.done)return 0;if(s.needsPhoto&&!st.photo)return 0;return +s.pay||0;}
+  function subDone(s){return state[s.id]&&state[s.id].done;}
+  function uid(p){return (p||'s')+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36);}
+
+  // ================= Today =================
   function renderToday(){
-    var el=document.getElementById('view-today'),html='',last='';
-    TASKS.forEach(function(t){
-      if(t.grp!==last){html+='<div class="grp">'+esc(t.grp)+'</div>';last=t.grp;}
-      var st=state[t.id],done=st&&st.done;
-      var refPhoto=(t.photos&&t.photos[0])||'';
-      html+='<div class="task'+(done?' done':'')+'"><div class="row"><div class="thumb">'+(st&&st.photo?'<img src="'+st.photo+'">':(refPhoto?'<img src="'+refPhoto+'">':esc(t.emoji)))+'</div>'+
-        '<div class="t-body"><h3>'+esc(t.name)+(t.qty?' <span class="qty">'+esc(t.qty)+'</span>':'')+(t.when?'<span class="when">'+esc(t.when)+'</span>':'')+(t.pay?'<span class="pay">'+money(t.pay)+'</span>':'')+'</h3>'+
-        '<p>'+esc(t.note)+(t.needsPhoto?' <span class="req">(photo to get paid)</span>':'')+'</p>'+
-        ((t.photos&&t.photos.length>1)?'<div class="t-strip">'+t.photos.map(function(p){return '<img src="'+esc(p)+'">';}).join('')+'</div>':'')+'</div></div>';
-      if(done){
-        var paid=earnedFor(t);
-        html+='<div class="stamp">✓ Done '+fmtTime(st.at)+(st.photo?' <span class="hasphoto">· 📷 +'+money(t.pay)+'</span>':(t.needsPhoto?' <span class="nophoto">· no photo — '+money(t.pay)+' not earned</span>':''))+'</div>';
-      } else {
-        html+='<div class="actions"><button class="done-btn" data-act="done" data-id="'+t.id+'">Mark Done</button>'+
-          '<button class="cam-btn'+(t.needsPhoto?' req':'')+'" data-act="cam" data-id="'+t.id+'">📷</button>'+
-          '<input class="cam-in" type="file" accept="image/*" capture="environment" data-for="'+t.id+'"></div>';
-      }
-      html+='</div>';
+    var el=document.getElementById('view-today'),html='';
+    if(!MODULES.length){ html='<div class="note">Nothing here yet. Go to <b>Setup</b> and add your first area.</div>'; el.innerHTML=html; updateBar(); return; }
+    MODULES.forEach(function(m){
+      var doneN=m.subs.filter(subDone).length, tot=m.subs.length;
+      html+='<div class="mod-head"><div class="mod-em">'+(m.emoji&&m.emoji.charAt(0)==='d'&&m.emoji.indexOf('data:')===0?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</div>'+
+        '<div class="mod-name"><b>'+esc(m.name)+'</b>'+(m.when?'<span class="when">'+esc(m.when)+'</span>':'')+'</div>'+
+        '<div class="mod-prog'+(tot&&doneN===tot?' all':'')+'">'+doneN+'/'+tot+'</div></div>';
+      if(!tot){ html+='<div class="mod-empty">No sub-tasks yet — add them in Setup.</div>'; }
+      m.subs.forEach(function(s){
+        var st=state[s.id],done=st&&st.done;
+        var refPhoto=(s.photos&&s.photos[0])||'';
+        html+='<div class="task'+(done?' done':'')+'"><div class="row"><div class="thumb">'+(st&&st.photo?'<img src="'+st.photo+'">':(refPhoto?'<img src="'+refPhoto+'">':esc(m.emoji||'🐾')))+'</div>'+
+          '<div class="t-body"><h3>'+esc(s.name)+(s.pay?'<span class="pay">'+money(s.pay)+'</span>':'')+'</h3>'+
+          '<p>'+esc(s.note)+(s.needsPhoto?' <span class="req">(photo to get paid)</span>':'')+'</p>'+
+          ((s.photos&&s.photos.length>1)?'<div class="t-strip">'+s.photos.map(function(p){return '<img src="'+esc(p)+'">';}).join('')+'</div>':'')+'</div></div>';
+        if(done){
+          html+='<div class="stamp">✓ Done '+fmtTime(st.at)+(st.photo?' <span class="hasphoto">· 📷 +'+money(s.pay)+'</span>':(s.needsPhoto?' <span class="nophoto">· no photo — '+money(s.pay)+' not earned</span>':''))+'</div>';
+        } else {
+          html+='<div class="actions"><button class="done-btn" data-act="done" data-id="'+s.id+'">Mark Done</button>'+
+            '<button class="cam-btn'+(s.needsPhoto?' req':'')+'" data-act="cam" data-id="'+s.id+'">📷</button>'+
+            '<input class="cam-in" type="file" accept="image/*" capture="environment" data-for="'+s.id+'"></div>';
+        }
+        html+='</div>';
+      });
     });
     el.innerHTML=html; updateBar();
   }
   function updateBar(){
-    var done=TASKS.filter(function(t){return state[t.id]&&state[t.id].done;}).length;
-    var pct=TASKS.length?Math.round(done/TASKS.length*100):0;
+    var subs=allSubs(), tot=subs.length;
+    var done=subs.filter(function(x){return subDone(x.s);}).length;
+    var pct=tot?Math.round(done/tot*100):0;
     document.getElementById('barFill').style.width=pct+'%';
-    document.getElementById('barLbl').textContent=done+' of '+TASKS.length+' done';
-    var earned=TASKS.reduce(function(s,t){return s+earnedFor(t);},0);
+    document.getElementById('barLbl').textContent=done+' of '+tot+' done';
+    var earned=subs.reduce(function(s,x){return s+earnedFor(x.s);},0);
     document.getElementById('payPill').textContent=money(earned)+' earned';
     document.getElementById('dayLine').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+" — today's chores";
   }
   document.getElementById('view-today').addEventListener('click',function(e){
-    var b=e.target.closest('[data-act]');if(!b)return;var id=b.getAttribute('data-id');var t=TASKS.find(function(x){return x.id===id;});
+    var b=e.target.closest('[data-act]');if(!b)return;var id=b.getAttribute('data-id');
     if(b.getAttribute('data-act')==='cam'){b.parentNode.querySelector('.cam-in[data-for="'+id+'"]').click();return;}
     state[id]=Object.assign({},state[id],{done:true,at:new Date().toISOString()});saveState();renderToday();
   });
@@ -232,25 +327,26 @@
     resizeImage(inp.files[0],function(d){state[id]=Object.assign({},state[id],{photo:d});saveState();renderToday();});
   });
 
-  // ---------- Dad's View ----------
+  // ================= Dad's View =================
   function renderDad(){
     var el=document.getElementById('view-dad');
-    var done=TASKS.filter(function(t){return state[t.id]&&state[t.id].done;});
-    var missing=TASKS.filter(function(t){return !(state[t.id]&&state[t.id].done);});
-    var earned=TASKS.reduce(function(s,t){return s+earnedFor(t);},0);
-    var possible=TASKS.reduce(function(s,t){return s+(+t.pay||0);},0);
+    var subs=allSubs();
+    var done=subs.filter(function(x){return subDone(x.s);});
+    var missing=subs.filter(function(x){return !subDone(x.s);});
+    var earned=subs.reduce(function(s,x){return s+earnedFor(x.s);},0);
+    var possible=subs.reduce(function(s,x){return s+(+x.s.pay||0);},0);
     var lost=possible-earned;
     var html='<div class="note">Your view from the road. What got done, when, and what it cost him if he skipped it or didn\'t send a photo.</div>';
-    html+='<div class="dad-sum"><div class="dcard"><div class="n g">'+done.length+'/'+TASKS.length+'</div><div class="l">Done</div></div>'+
+    html+='<div class="dad-sum"><div class="dcard"><div class="n g">'+done.length+'/'+subs.length+'</div><div class="l">Done</div></div>'+
       '<div class="dcard"><div class="n gold">'+money(earned)+'</div><div class="l">Earned</div></div>'+
       '<div class="dcard"><div class="n r">'+money(lost)+'</div><div class="l">Lost</div></div></div>';
     if(missing.length){html+='<div class="grp">Not done ('+missing.length+')</div>';
-      missing.forEach(function(t){html+='<div class="drow"><span class="dot no"></span><span class="nm">'+esc(t.emoji)+' '+esc(t.name)+'</span>'+
-        '<span class="ts">-'+money(t.pay)+'</span><button class="ask'+(asks[t.id]?' sent':'')+'" data-ask="'+t.id+'">'+(asks[t.id]?'Asked ✓':'Ask')+'</button></div>';});}
+      missing.forEach(function(x){var s=x.s;html+='<div class="drow"><span class="dot no"></span><span class="nm"><span class="mod">'+esc(x.m.name)+' · </span>'+esc(s.name)+'</span>'+
+        '<span class="ts">-'+money(s.pay)+'</span><button class="ask'+(asks[s.id]?' sent':'')+'" data-ask="'+s.id+'">'+(asks[s.id]?'Asked ✓':'Ask')+'</button></div>';});}
     html+='<div class="grp">Done ('+done.length+')</div>';
-    done.forEach(function(t){var st=state[t.id];var noPay=t.needsPhoto&&!st.photo;
-      html+='<div class="drow"><span class="dot '+(noPay?'warn':'ok')+'"></span><span class="nm">'+esc(t.emoji)+' '+esc(t.name)+(st.photo?' 📷':(t.needsPhoto?' <span style="color:var(--red)">(no photo)</span>':''))+'</span><span class="ts">'+fmtTime(st.at)+'</span>'+
-        '<button class="ask'+(asks[t.id]?' sent':'')+'" data-ask="'+t.id+'">'+(asks[t.id]?'Asked ✓':'Ask')+'</button></div>';});
+    done.forEach(function(x){var s=x.s;var st=state[s.id];var noPay=s.needsPhoto&&!st.photo;
+      html+='<div class="drow"><span class="dot '+(noPay?'warn':'ok')+'"></span><span class="nm"><span class="mod">'+esc(x.m.name)+' · </span>'+esc(s.name)+(st.photo?' 📷':(s.needsPhoto?' <span style="color:var(--red)">(no photo)</span>':''))+'</span><span class="ts">'+fmtTime(st.at)+'</span>'+
+        '<button class="ask'+(asks[s.id]?' sent':'')+'" data-ask="'+s.id+'">'+(asks[s.id]?'Asked ✓':'Ask')+'</button></div>';});
     html+='<button class="btn-ghost" id="resetBtn" style="width:100%;margin-top:14px">Start a new day (clear today)</button>';
     el.innerHTML=html;
   }
@@ -260,65 +356,96 @@
     if(e.target.id==='resetBtn'){if(confirm('Clear today and start fresh?')){state={};asks={};saveState();localStorage.setItem('cc-asks','{}');renderToday();renderDad();}}
   });
 
-  // ---------- Setup ----------
+  // ================= Setup =================
   function renderSetup(){
     var el=document.getElementById('view-setup');
-    var html='<div class="note">This is where YOU build the list. Add each thing, write EXACTLY how to do it, snap a photo, set how much it pays. Only you know the particular way — put it here once.</div>';
-    html+='<button class="add-btn" id="addTask">＋ Add a task</button>';
-    var last='';
-    TASKS.forEach(function(t,i){
-      if(t.grp!==last){html+='<div class="grp">'+esc(t.grp)+'</div>';last=t.grp;}
-      html+='<div class="srow"><span class="em">'+((t.photos&&t.photos[0])?'<img src="'+t.photos[0]+'" style="width:34px;height:34px;border-radius:8px;object-fit:cover">':esc(t.emoji))+'</span>'+
-        '<span class="nm"><b>'+esc(t.name)+'</b><small>'+esc(t.when||'')+(t.pay?' · '+money(t.pay):'')+(t.needsPhoto?' · 📷 for pay':'')+'</small></span>'+
-        '<button class="icon-btn" data-edit="'+t.id+'">✏️</button><button class="icon-btn" data-del="'+t.id+'">🗑️</button></div>';
+    var html='<div class="note">This is where YOU build the list. Make an <b>area</b> (name it anything — "Chicken Yard"), then add each little job inside it. Write EXACTLY how you do it, snap a photo, set what it pays. Only you know the particular way — put it here once.</div>';
+    html+='<button class="add-btn" id="addModule">＋ Add an area</button>';
+    MODULES.forEach(function(m){
+      html+='<div class="mod-block"><div class="mod-block-head"><span class="em">'+(isImg(m.emoji)?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</span>'+
+        '<span class="nm"><b>'+esc(m.name)+'</b><small>'+(m.when?esc(m.when)+' · ':'')+m.subs.length+' task'+(m.subs.length===1?'':'s')+'</small></span>'+
+        '<button class="icon-btn" data-medit="'+m.id+'">✏️</button><button class="icon-btn" data-mdel="'+m.id+'">🗑️</button></div>';
+      m.subs.forEach(function(s){
+        html+='<div class="srow"><span class="em">'+((s.photos&&s.photos[0])?'<img src="'+s.photos[0]+'">':'🔹')+'</span>'+
+          '<span class="nm"><b>'+esc(s.name)+'</b><small>'+(s.pay?money(s.pay):'$0')+(s.needsPhoto?' · 📷 for pay':'')+'</small></span>'+
+          '<button class="icon-btn" data-sedit="'+m.id+'|'+s.id+'">✏️</button><button class="icon-btn" data-sdel="'+m.id+'|'+s.id+'">🗑️</button></div>';
+      });
+      html+='<button class="sub-add" data-sadd="'+m.id+'">＋ Add a task to '+esc(m.name)+'</button></div>';
     });
     el.innerHTML=html;
   }
+  function isImg(v){return typeof v==='string'&&v.indexOf('data:')===0;}
   document.getElementById('view-setup').addEventListener('click',function(e){
-    if(e.target.id==='addTask'){openEditor(null);return;}
-    var ed=e.target.closest('[data-edit]');if(ed){openEditor(ed.getAttribute('data-edit'));return;}
-    var del=e.target.closest('[data-del]');if(del){var id=del.getAttribute('data-del');var t=TASKS.find(function(x){return x.id===id;});
-      if(confirm('Delete "'+t.name+'"?')){TASKS=TASKS.filter(function(x){return x.id!==id;});saveTasks();renderSetup();renderToday();}}
+    var t;
+    if(e.target.id==='addModule'){openModuleEditor(null);return;}
+    if((t=e.target.closest('[data-medit]'))){openModuleEditor(t.getAttribute('data-medit'));return;}
+    if((t=e.target.closest('[data-mdel]'))){var m=MODULES.find(function(x){return x.id===t.getAttribute('data-mdel');});
+      if(m&&confirm('Delete the whole "'+m.name+'" area and its '+m.subs.length+' task(s)?')){MODULES=MODULES.filter(function(x){return x!==m;});saveModules();renderSetup();renderToday();}return;}
+    if((t=e.target.closest('[data-sadd]'))){openSubEditor(t.getAttribute('data-sadd'),null);return;}
+    if((t=e.target.closest('[data-sedit]'))){var p=t.getAttribute('data-sedit').split('|');openSubEditor(p[0],p[1]);return;}
+    if((t=e.target.closest('[data-sdel]'))){var p2=t.getAttribute('data-sdel').split('|');var mm=MODULES.find(function(x){return x.id===p2[0];});
+      if(mm){var ss=mm.subs.find(function(x){return x.id===p2[1];});
+        if(ss&&confirm('Delete "'+ss.name+'"?')){mm.subs=mm.subs.filter(function(x){return x!==ss;});saveModules();renderSetup();renderToday();}}return;}
   });
 
-  function openEditor(id){
-    var t=id?TASKS.find(function(x){return x.id===id;}):{grp:'Birds',emoji:'🐔',when:'AM',pay:1,needsPhoto:false};
+  // ----- module editor (name / icon / when) -----
+  function openModuleEditor(id){
+    var m=id?MODULES.find(function(x){return x.id===id;}):{name:'',emoji:'🐾',when:'',subs:[]};
     var host=document.getElementById('modalHost');
     host.innerHTML='<div class="modal" id="modal"><div class="sheet">'+
-      '<h2>'+(id?'Edit task':'New task')+'</h2>'+
-      '<div class="fld"><label>Name</label><input id="f-name" value="'+esc(t.name||'')+'" placeholder="e.g. Tub ponds"></div>'+
-      '<div class="two"><div class="fld"><label>Group</label><select id="f-grp">'+GROUPS.map(function(g){return '<option'+(g===t.grp?' selected':'')+'>'+g+'</option>';}).join('')+'</select></div>'+
-      '<div class="fld"><label>When</label><input id="f-when" value="'+esc(t.when||'')+'" placeholder="AM / PM / Daily"></div></div>'+
-      '<div class="two"><div class="fld"><label>Icon</label><select id="f-emoji">'+EMOJIS.map(function(m){return '<option'+(m===t.emoji?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>'+
-      '<div class="fld"><label>How many (optional)</label><input id="f-qty" value="'+esc(t.qty||'')+'" placeholder="6 trees"></div></div>'+
-      '<div class="fld"><label>Exactly how to do it</label><textarea id="f-note" placeholder="The particular way — every step, and WHY (e.g. don\'t leave the hose, chlorine kills the fish)">'+esc(t.note||'')+'</textarea></div>'+
-      '<div class="two"><div class="fld"><label>Pays ($)</label><input id="f-pay" type="number" step="0.25" value="'+(t.pay!=null?t.pay:'')+'" placeholder="2.00"></div>'+
-      '<div class="fld"><label>Add photos</label><input id="f-photo" type="file" accept="image/*" multiple></div></div>'+
-      '<div id="f-strip" class="photo-strip"></div>'+
-      '<label class="chk" style="margin:6px 0 16px"><input type="checkbox" id="f-needs"'+(t.needsPhoto?' checked':'')+'> Photo required to get paid</label>'+
-      '<div class="sheet-actions"><button class="btn-ghost" id="cancelBtn">Cancel</button><button class="btn-primary" id="saveBtn">Save</button></div>'+
+      '<h2>'+(id?'Edit area':'New area')+'</h2>'+
+      '<p class="sub">An area groups the little jobs together — like "Chicken Yard" or "Fish Tank."</p>'+
+      '<div class="fld"><label>Area name</label><input id="m-name" value="'+esc(m.name||'')+'" placeholder="e.g. Chicken Yard"></div>'+
+      '<div class="two"><div class="fld"><label>Icon</label><select id="m-emoji">'+EMOJIS.map(function(x){return '<option'+(x===m.emoji?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div>'+
+      '<div class="fld"><label>When (optional)</label><input id="m-when" value="'+esc(m.when||'')+'" placeholder="AM / PM / Daily"></div></div>'+
+      '<div class="sheet-actions">'+(id?'<button class="btn-danger" id="mDel">Delete</button>':'')+'<button class="btn-ghost" id="mCancel">Cancel</button><button class="btn-primary" id="mSave">Save</button></div>'+
       '</div></div>';
-    var photos=(t.photos&&t.photos.slice())||(t.photo?[t.photo]:[]);
-    function drawStrip(){document.getElementById('f-strip').innerHTML=photos.map(function(p,i){return '<div class="pthumb"><img src="'+p+'"><button type="button" data-rm="'+i+'">×</button></div>';}).join('');}
-    drawStrip();
-    document.getElementById('f-strip').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;photos.splice(+b.getAttribute('data-rm'),1);drawStrip();});
-    document.getElementById('f-photo').addEventListener('change',function(e){[].slice.call(e.target.files).forEach(function(f){resizeImage(f,function(d){photos.push(d);drawStrip();});});e.target.value='';});
-    document.getElementById('cancelBtn').onclick=function(){host.innerHTML='';};
+    document.getElementById('mCancel').onclick=function(){host.innerHTML='';};
     document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')host.innerHTML='';});
-    document.getElementById('saveBtn').onclick=function(){
-      var name=document.getElementById('f-name').value.trim();if(!name){alert('Give it a name.');return;}
-      var obj={id:id||('t'+Date.now()),grp:document.getElementById('f-grp').value,when:document.getElementById('f-when').value.trim(),
-        emoji:document.getElementById('f-emoji').value,qty:document.getElementById('f-qty').value.trim(),name:name,
-        note:document.getElementById('f-note').value.trim(),pay:parseFloat(document.getElementById('f-pay').value)||0,
-        needsPhoto:document.getElementById('f-needs').checked,photos:photos};
-      if(id){var i=TASKS.findIndex(function(x){return x.id===id;});TASKS[i]=obj;}else{TASKS.push(obj);}
-      // keep grouped order
-      TASKS.sort(function(a,b){return GROUPS.indexOf(a.grp)-GROUPS.indexOf(b.grp);});
-      saveTasks();host.innerHTML='';renderSetup();renderToday();
+    if(id)document.getElementById('mDel').onclick=function(){if(confirm('Delete the whole "'+m.name+'" area and its '+m.subs.length+' task(s)?')){MODULES=MODULES.filter(function(x){return x.id!==id;});saveModules();host.innerHTML='';renderSetup();renderToday();}};
+    document.getElementById('mSave').onclick=function(){
+      var name=document.getElementById('m-name').value.trim();if(!name){alert('Give the area a name.');return;}
+      var emoji=document.getElementById('m-emoji').value, when=document.getElementById('m-when').value.trim();
+      if(id){m.name=name;m.emoji=emoji;m.when=when;}
+      else{MODULES.push({id:uid('m'),name:name,emoji:emoji,when:when,subs:[]});}
+      saveModules();host.innerHTML='';renderSetup();renderToday();
     };
   }
 
-  // ---------- tabs ----------
+  // ----- sub-task editor (instruction / photos / pay / needsPhoto) -----
+  function openSubEditor(moduleId, subId){
+    var m=MODULES.find(function(x){return x.id===moduleId;});if(!m)return;
+    var s=subId?m.subs.find(function(x){return x.id===subId;}):{name:'',note:'',pay:1,needsPhoto:false,photos:[]};
+    var host=document.getElementById('modalHost');
+    host.innerHTML='<div class="modal" id="modal"><div class="sheet">'+
+      '<h2>'+(subId?'Edit task':'New task')+'</h2>'+
+      '<p class="sub">Inside <b>'+esc(m.name)+'</b></p>'+
+      '<div class="fld"><label>What is it?</label><input id="s-name" value="'+esc(s.name||'')+'" placeholder="e.g. Collect eggs"></div>'+
+      '<div class="fld"><label>Exactly how to do it</label><textarea id="s-note" placeholder="Every step, and WHY (e.g. don\'t leave the hose running — chlorine kills the fish)">'+esc(s.note||'')+'</textarea></div>'+
+      '<div class="two"><div class="fld"><label>Pays ($)</label><input id="s-pay" type="number" step="0.25" value="'+(s.pay!=null?s.pay:'')+'" placeholder="1.00"></div>'+
+      '<div class="fld"><label>Add photos</label><input id="s-photo" type="file" accept="image/*" multiple></div></div>'+
+      '<div id="s-strip" class="photo-strip"></div>'+
+      '<label class="chk" style="margin:6px 0 16px"><input type="checkbox" id="s-needs"'+(s.needsPhoto?' checked':'')+'> Photo required to get paid</label>'+
+      '<div class="sheet-actions">'+(subId?'<button class="btn-danger" id="sDel">Delete</button>':'')+'<button class="btn-ghost" id="sCancel">Cancel</button><button class="btn-primary" id="sSave">Save</button></div>'+
+      '</div></div>';
+    var photos=(s.photos&&s.photos.slice())||[];
+    function drawStrip(){document.getElementById('s-strip').innerHTML=photos.map(function(p,i){return '<div class="pthumb"><img src="'+p+'"><button type="button" data-rm="'+i+'">×</button></div>';}).join('');}
+    drawStrip();
+    document.getElementById('s-strip').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;photos.splice(+b.getAttribute('data-rm'),1);drawStrip();});
+    document.getElementById('s-photo').addEventListener('change',function(e){[].slice.call(e.target.files).forEach(function(f){resizeImage(f,function(d){photos.push(d);drawStrip();});});e.target.value='';});
+    document.getElementById('sCancel').onclick=function(){host.innerHTML='';};
+    document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')host.innerHTML='';});
+    if(subId)document.getElementById('sDel').onclick=function(){if(confirm('Delete "'+s.name+'"?')){m.subs=m.subs.filter(function(x){return x.id!==subId;});saveModules();host.innerHTML='';renderSetup();renderToday();}};
+    document.getElementById('sSave').onclick=function(){
+      var name=document.getElementById('s-name').value.trim();if(!name){alert('Give the task a name.');return;}
+      var obj={id:subId||uid('s'),name:name,note:document.getElementById('s-note').value.trim(),
+        pay:parseFloat(document.getElementById('s-pay').value)||0,needsPhoto:document.getElementById('s-needs').checked,photos:photos};
+      if(subId){var i=m.subs.findIndex(function(x){return x.id===subId;});m.subs[i]=obj;}else{m.subs.push(obj);}
+      saveModules();host.innerHTML='';renderSetup();renderToday();
+    };
+  }
+
+  // ================= tabs =================
   var tabs={'tab-today':['view-today',renderToday],'tab-dad':['view-dad',renderDad],'tab-setup':['view-setup',renderSetup]};
   Object.keys(tabs).forEach(function(tid){document.getElementById(tid).addEventListener('click',function(){
     Object.keys(tabs).forEach(function(k){document.getElementById(k).setAttribute('aria-selected',k===tid?'true':'false');document.getElementById(tabs[k][0]).hidden=(k!==tid);});
