@@ -54,9 +54,11 @@
     .c6{--mod-soft:#2e1622;--mod-deep:#f06aa0} .c7{--mod-soft:#301518;--mod-deep:#f2545b}
   }
 
-  /* module section header (Today) */
-  .mod-head{display:flex;align-items:center;gap:11px;margin:22px 2px 10px;background:var(--mod-soft,var(--green-soft));border-left:4px solid var(--mod-deep,var(--green));border-radius:12px;padding:9px 12px}
-  .mod-head:first-child{margin-top:6px}
+  /* each area = a whole color-washed panel (Today) */
+  .mod-sec{background:var(--mod-soft,transparent);border:1px solid var(--line);border-left:6px solid var(--mod-deep,var(--green));border-radius:16px;padding:8px 10px 6px;margin:16px 0}
+  .mod-sec:first-child{margin-top:8px}
+  /* module section header (Today) — sits on the washed panel */
+  .mod-head{display:flex;align-items:center;gap:11px;margin:6px 4px 12px;padding:2px}
   .mod-em{width:42px;height:42px;flex:none;border-radius:12px;background:var(--card);color:var(--mod-deep,var(--green-deep));display:grid;place-items:center;font-size:23px;overflow:hidden}
   .mod-em img{width:100%;height:100%;object-fit:cover}
   .mod-name{flex:1;min-width:0}
@@ -119,7 +121,7 @@
 
   /* setup */
   .add-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;appearance:none;border:1.5px dashed var(--green);background:transparent;color:var(--green-deep);border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;margin-bottom:14px}
-  .mod-block{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--mod-deep,var(--line));border-radius:16px;box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden}
+  .mod-block{background:var(--mod-soft,var(--card));border:1px solid var(--line);border-left:6px solid var(--mod-deep,var(--line));border-radius:16px;box-shadow:var(--shadow);margin-bottom:13px;overflow:hidden}
   .mod-block-head{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(--mod-soft,var(--green-soft))}
   .mod-block-head .em{font-size:22px;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;overflow:hidden;background:var(--card)}
   .mod-block-head .em img{width:32px;height:32px;object-fit:cover;border-radius:8px}
@@ -344,7 +346,8 @@
     if(!MODULES.length){ html='<div class="note">Nothing here yet. Go to <b>Setup</b> and add your first area.</div>'; el.innerHTML=html; updateBar(); return; }
     MODULES.forEach(function(m){
       var doneN=m.subs.filter(subDone).length, tot=m.subs.length, cc=modColor(m);
-      html+='<div class="mod-head '+cc+'"><div class="mod-em">'+(m.emoji&&m.emoji.charAt(0)==='d'&&m.emoji.indexOf('data:')===0?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</div>'+
+      html+='<div class="mod-sec '+cc+'">';
+      html+='<div class="mod-head"><div class="mod-em">'+(m.emoji&&m.emoji.charAt(0)==='d'&&m.emoji.indexOf('data:')===0?'<img src="'+m.emoji+'">':esc(m.emoji||'🐾'))+'</div>'+
         '<div class="mod-name"><b>'+esc(m.name)+'</b>'+(m.when?'<span class="when">'+esc(m.when)+'</span>':'')+'</div>'+
         '<div class="mod-prog'+(tot&&doneN===tot?' all':'')+'">'+doneN+'/'+tot+'</div></div>';
       if(!tot){ html+='<div class="mod-empty">No sub-tasks yet — add them in Setup.</div>'; }
@@ -366,6 +369,7 @@
         }
         html+='</div>';
       });
+      html+='</div>';
     });
     el.innerHTML=html; updateBar();
   }
