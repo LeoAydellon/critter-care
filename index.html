@@ -76,10 +76,15 @@
   .nophoto{color:var(--red)}
   .t-strip{display:flex;gap:6px;margin-top:9px;overflow-x:auto}
   .t-strip img{width:52px;height:52px;border-radius:8px;object-fit:cover;flex:none;border:1px solid var(--line)}
-  .refs-label{font-size:11px;font-weight:800;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 6px}
-  .ref-gallery{display:flex;gap:7px;flex-wrap:wrap}
-  .ref-gallery img{width:78px;height:78px;border-radius:10px;object-fit:cover;border:1px solid var(--line);cursor:zoom-in}
+  .ref-gallery{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .reffig{margin:0;width:calc(50% - 5px);background:var(--bg);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .reffig img{width:100%;height:112px;object-fit:cover;display:block;cursor:zoom-in}
+  .reffig figcaption{padding:7px 10px;font-size:12.5px;color:var(--ink);font-weight:600;line-height:1.32}
   .thumb img.zoom{cursor:zoom-in}
+  .pcard{display:flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px;margin-bottom:8px}
+  .pcard img{width:60px;height:60px;border-radius:8px;object-fit:cover;flex:none;cursor:zoom-in}
+  .pcard .pcap{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px;font-size:13px;font-family:inherit;color:var(--ink)}
+  .pcard .prm{width:30px;height:30px;border-radius:8px;border:0;background:var(--red-soft);color:var(--red);font-size:17px;cursor:pointer;flex:none;line-height:1}
   .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:80;display:flex;align-items:center;justify-content:center;padding:14px}
   .lightbox img{max-width:100%;max-height:100%;border-radius:10px}
   .lightbox .x{position:fixed;top:calc(env(safe-area-inset-top) + 12px);right:16px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:22px;cursor:pointer}
@@ -266,6 +271,10 @@
   function openLightbox(src){ if(!src)return; var h=document.getElementById('modalHost');
     h.innerHTML='<div class="lightbox" id="lightbox"><button class="x" type="button">×</button><img src="'+src+'"></div>';
     document.getElementById('lightbox').addEventListener('click',function(){h.innerHTML='';}); }
+  // photos support BOTH old plain-string entries and new {img,cap} objects (per-picture note)
+  function pImg(p){ return (typeof p==='string')?p:((p&&p.img)||''); }
+  function pCap(p){ return (typeof p==='string')?'':((p&&p.cap)||''); }
+  function firstImg(s){ return (s.photos&&s.photos.length)?pImg(s.photos[0]):''; }
 
   // shrink phone photos before storing (full-size base64 blows past localStorage's ~5MB cap)
   function resizeImage(file, cb){
@@ -307,7 +316,7 @@
         html+='<div class="task'+(done?' done':'')+'"><div class="row"><div class="thumb">'+(st&&st.photo?'<img class="zoom" src="'+st.photo+'">':esc(m.emoji||'🐾'))+'</div>'+
           '<div class="t-body"><h3>'+esc(s.name)+(s.pay?'<span class="pay">'+money(s.pay)+'</span>':'')+'</h3>'+
           '<p>'+esc(s.note)+(s.needsPhoto?' <span class="req">(photo to get paid)</span>':'')+'</p>'+
-          (refs.length?'<div class="refs-label">📸 How it should look</div><div class="ref-gallery">'+refs.map(function(p){return '<img class="zoom" src="'+esc(p)+'">';}).join('')+'</div>':'')+'</div></div>';
+          (refs.length?'<div class="ref-gallery">'+refs.map(function(p){var im=pImg(p),cap=pCap(p);return '<figure class="reffig"><img class="zoom" src="'+esc(im)+'">'+(cap?'<figcaption>'+esc(cap)+'</figcaption>':'')+'</figure>';}).join('')+'</div>':'')+'</div></div>';
         if(done){
           html+='<div class="stamp">✓ Done '+fmtTime(st.at)+(st.photo?' <span class="hasphoto">· 📷 +'+money(s.pay)+'</span>':(s.needsPhoto?' <span class="nophoto">· no photo — '+money(s.pay)+' not earned</span>':''))+'</div>';
         } else {
@@ -382,7 +391,7 @@
         '<span class="nm"><b>'+esc(m.name)+'</b><small>'+(m.when?esc(m.when)+' · ':'')+m.subs.length+' task'+(m.subs.length===1?'':'s')+'</small></span>'+
         '<button class="icon-btn" data-medit="'+m.id+'">✏️</button><button class="icon-btn" data-mdel="'+m.id+'">🗑️</button></div>';
       m.subs.forEach(function(s){
-        html+='<div class="srow"><span class="em">'+((s.photos&&s.photos[0])?'<img src="'+s.photos[0]+'">':'🔹')+'</span>'+
+        html+='<div class="srow"><span class="em">'+(firstImg(s)?'<img src="'+firstImg(s)+'">':'🔹')+'</span>'+
           '<span class="nm"><b>'+esc(s.name)+'</b><small>'+(s.pay?money(s.pay):'$0')+(s.needsPhoto?' · 📷 for pay':'')+'</small></span>'+
           '<button class="icon-btn" data-sedit="'+m.id+'|'+s.id+'">✏️</button><button class="icon-btn" data-sdel="'+m.id+'|'+s.id+'">🗑️</button></div>';
       });
@@ -439,7 +448,7 @@
       '<div class="fld"><label>What is it?</label><input id="s-name" value="'+esc(s.name||'')+'" placeholder="e.g. Collect eggs"></div>'+
       '<div class="fld"><label>Exactly how to do it</label><textarea id="s-note" placeholder="Every step, and WHY (e.g. don\'t leave the hose running — chlorine kills the fish)">'+esc(s.note||'')+'</textarea></div>'+
       '<div class="fld"><label>Pays ($)</label><input id="s-pay" type="number" step="0.25" value="'+(s.pay!=null?s.pay:'')+'" placeholder="1.00"></div>'+
-      '<div class="fld"><label>Photos — how it should look</label>'+
+      '<div class="fld"><label>Pictures (add a note under each — optional)</label>'+
       '<div class="photo-btns"><button type="button" class="pbtn" id="s-take">📷 Take a photo</button><button type="button" class="pbtn" id="s-lib">🖼️ From library</button></div>'+
       '<input id="s-photo-take" type="file" accept="image/*" capture="environment" hidden>'+
       '<input id="s-photo-lib" type="file" accept="image/*" multiple hidden></div>'+
@@ -447,11 +456,12 @@
       '<label class="chk" style="margin:6px 0 16px"><input type="checkbox" id="s-needs"'+(s.needsPhoto?' checked':'')+'> Photo required to get paid</label>'+
       '<div class="sheet-actions">'+(subId?'<button class="btn-danger" id="sDel">Delete</button>':'')+'<button class="btn-ghost" id="sCancel">Cancel</button><button class="btn-primary" id="sSave">Save</button></div>'+
       '</div></div>';
-    var photos=(s.photos&&s.photos.slice())||[];
-    function drawStrip(){document.getElementById('s-strip').innerHTML=photos.map(function(p,i){return '<div class="pthumb"><img src="'+p+'"><button type="button" data-rm="'+i+'">×</button></div>';}).join('');}
+    var photos=(s.photos&&s.photos.slice().map(function(p){return {img:pImg(p),cap:pCap(p)};}))||[];
+    function drawStrip(){document.getElementById('s-strip').innerHTML=photos.map(function(p,i){return '<div class="pcard"><img class="zoom" src="'+p.img+'"><input class="pcap" data-i="'+i+'" placeholder="Note for this picture, e.g. Do NOT take these eggs" value="'+esc(p.cap)+'"><button type="button" class="prm" data-rm="'+i+'">×</button></div>';}).join('');}
     drawStrip();
-    document.getElementById('s-strip').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;photos.splice(+b.getAttribute('data-rm'),1);drawStrip();});
-    function addFiles(e){[].slice.call(e.target.files).forEach(function(f){resizeImage(f,function(d){photos.push(d);drawStrip();});});e.target.value='';}
+    document.getElementById('s-strip').addEventListener('click',function(e){var z=e.target.closest('.zoom');if(z){openLightbox(z.getAttribute('src'));return;}var b=e.target.closest('[data-rm]');if(!b)return;photos.splice(+b.getAttribute('data-rm'),1);drawStrip();});
+    document.getElementById('s-strip').addEventListener('input',function(e){var c=e.target.closest('.pcap');if(c){photos[+c.getAttribute('data-i')].cap=c.value;}});
+    function addFiles(e){[].slice.call(e.target.files).forEach(function(f){resizeImage(f,function(d){photos.push({img:d,cap:''});drawStrip();});});e.target.value='';}
     document.getElementById('s-take').onclick=function(){document.getElementById('s-photo-take').click();};
     document.getElementById('s-lib').onclick=function(){document.getElementById('s-photo-lib').click();};
     document.getElementById('s-photo-take').addEventListener('change',addFiles);
