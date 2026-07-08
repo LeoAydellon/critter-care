@@ -73,7 +73,7 @@
 <div class="wrap">
   <header>
     <div class="kicker">CTE Companion App · Digital Media &amp; Animation</div>
-    <h1>Driver's Ed for the <span class="em">Animation Certification</span></h1>
+    <h1>Get your students <span class="em">certification-ready</span></h1>
     <p class="sub">The classroom companion that gets your CTE students ready to pass the Arizona Digital Animation Technical Skills Assessment — and shows you exactly who's ready.</p>
   </header>
 
@@ -159,7 +159,8 @@
   <!-- WAITLIST -->
   <div class="card" id="waitCard">
     <h2>Get early access</h2>
-    <p class="lead">CTE Companion Apps are coming. <b>Animation is first.</b> More pathways may follow. Join the early-access list and we'll bring it to your classroom.</p>
+    <p class="lead">CTE Companion Apps are coming. <b>Animation is first.</b> More pathways will follow. Join the early-access list and we'll bring it to your classroom.</p>
+    <p class="lead" style="margin-top:8px;font-size:13px">And it isn't just CTE — we build custom study &amp; practice apps for <b>any class</b> a teacher runs: math, biology, history, whatever you teach.</p>
     <form id="waitForm">
       <label class="f">Your name</label>
       <input required id="wName" placeholder="Jane Doe" autocomplete="name">
@@ -261,14 +262,12 @@
   <div class="card" id="contactCard">
     <div class="q-meta"><span class="stepkick">WORK WITH US</span><span class="pill">Studio Beltran</span></div>
     <h2>Want this at your school?</h2>
-    <p class="lead">Two ways we can help — tap one and it starts an email to Leo (it'll send the moment you're back online):</p>
     <a class="btn block" href="mailto:leo@studiobeltran.com?subject=Bring%20the%20Animation%20program%20to%20our%20school&body=Hi%20Leo%2C%20I%20saw%20the%20CTE%20Companion%20demo%20at%20the%20ACTEAZ%20conference%20and%20I%27d%20like%20to%20talk%20about%20bringing%20the%20animation%20program%20to%20our%20school.%0A%0AName%3A%20%0ASchool%2FDistrict%3A%20%0ABest%20way%20to%20reach%20me%3A%20" style="text-decoration:none;display:block;text-align:center;margin-bottom:10px">🎬 &nbsp;Bring this Animation program to my school</a>
     <a class="btn block ghost" href="mailto:leo@studiobeltran.com?subject=Custom%20curriculum%20build&body=Hi%20Leo%2C%20I%20saw%20your%20demo%20at%20ACTEAZ.%20I%27d%20like%20to%20talk%20about%20designing%20a%20custom%20curriculum%20for%20my%20program%20%28it%20does%20not%20have%20to%20be%20animation%29.%0A%0AName%3A%20%0ASchool%2FDistrict%3A%20%0AWhat%20subject%2Fpathway%3A%20%0ABest%20way%20to%20reach%20me%3A%20" style="text-decoration:none;display:block;text-align:center;margin-bottom:14px">✏️ &nbsp;Design a custom curriculum (any subject)</a>
     <div class="explain show" style="text-align:center;line-height:1.7">
       <b>Studio Beltran</b> · Leo Beltran<br>
-      ✉️ <a href="mailto:leo@studiobeltran.com" style="color:var(--gold)">leo@studiobeltran.com</a><br>
-      🌐 <a href="https://leo0987.wixsite.com/mysite/cte-curriculum" target="_blank" rel="noopener" style="color:var(--gold)">Book a consultation &amp; see the reel</a>
-      <div style="color:var(--mute);font-size:12px;margin-top:10px">The email buttons work offline (they send once you're back online). The consultation link opens when you're on wifi or data.</div>
+      ✉️ <a href="mailto:leo@studiobeltran.com" style="color:var(--gold)">leo@studiobeltran.com</a>
+      <div style="color:var(--mute);font-size:12px;margin-top:10px">The email buttons work offline — they send once you're back online.</div>
     </div>
   </div>
 
@@ -277,12 +276,18 @@
   </div>
 </div>
 
-<!-- floating assistant — "Questions? Ask Athena" -->
-<button id="askBtn">💬 Questions? Ask Athena</button>
+<!-- floating contact — "Questions? We'll get back to you" -->
+<button id="askBtn">💬 Have a question?</button>
 <div id="askPanel">
-  <div class="ask-head"><span>Ask Athena</span><span id="askClose">×</span></div>
-  <div class="ask-body" id="askBody"><div class="ask-a">Hi! I'm Athena. Ask me anything about this app — what it is, how to use it in class, anything. Prefer a real person? Email <b>leo@studiobeltran.com</b> or call/text <b>(928) 517-7377</b>.</div></div>
-  <div class="ask-input"><input id="askQ" placeholder="Type your question..."><button id="askSend">Send</button></div>
+  <div class="ask-head"><span>Ask us a question</span><span id="askClose">×</span></div>
+  <div class="ask-body" id="askBody">
+    <div class="ask-a">Leave your question and email — someone from the studio will get back to you personally. That's it.</div>
+  </div>
+  <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+    <textarea id="askQ" placeholder="What would you like to know?" style="background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:10px;font-size:14px;min-height:64px;resize:vertical;font-family:inherit"></textarea>
+    <input id="askEmail" type="email" placeholder="Your email" style="background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:10px;font-size:14px">
+    <button id="askSend" style="background:var(--gold);color:#000;border:0;border-radius:9px;padding:11px;font-weight:700;cursor:pointer">Send to the studio</button>
+  </div>
 </div>
 
 <script>
@@ -581,29 +586,43 @@ async function askTutor(){
 }
 $("tAsk").onclick=askTutor;
 
-// Floating site assistant — fields product questions, escalates to a person
+// ——— Lead capture: every submission lands in ONE Google Sheet the studio checks (no server, no AI) ———
+var LEAD_ACTION="https://docs.google.com/forms/d/e/1FAIpQLSclE0C0OEB66viom-ezSbmoL-fHrbZVBo0SCBSgWg9y6huVww/formResponse";
+function submitLead(fields){
+  // fire-and-forget POST to the Google Form response endpoint; writes a row to the linked Sheet
+  var fd=new FormData();
+  if(fields.name!=null)  fd.append("entry.52130591",fields.name);
+  if(fields.email!=null) fd.append("entry.807202836",fields.email);
+  if(fields.school!=null)fd.append("entry.607228987",fields.school);
+  if(fields.role!=null)  fd.append("entry.2124230290",fields.role);
+  var msg=fields.message||"";
+  if(fields.source) msg=msg+(msg?"\n\n":"")+"— via: "+fields.source;
+  if(msg) fd.append("entry.1961391357",msg);
+  fd.append("entry.2103514481","A walkthrough or a pilot conversation");
+  try{ return fetch(LEAD_ACTION,{method:"POST",mode:"no-cors",body:fd}); }catch(e){ return Promise.resolve(); }
+}
+
+// Floating "Have a question?" — safe capture, NO live AI. Collects question + email → the studio Sheet.
 $("askBtn").onclick=()=>{ $("askPanel").style.display="flex"; $("askBtn").style.display="none"; $("askQ").focus(); };
 $("askClose").onclick=()=>{ $("askPanel").style.display="none"; $("askBtn").style.display="block"; };
-async function askAthena(){
-  const q=$("askQ").value.trim(); if(!q) return; const body=$("askBody");
-  const qd=document.createElement('div'); qd.className='ask-q'; qd.textContent=q; body.appendChild(qd);
-  $("askQ").value=""; const ad=document.createElement('div'); ad.className='ask-a'; ad.textContent="…"; body.appendChild(ad); body.scrollTop=body.scrollHeight;
-  try{ const r=await fetch("/api/assistant",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q})});
-    const d=await r.json(); ad.textContent=d.answer; }
-  catch(e){ ad.textContent="Email leo@studiobeltran.com and a real person will help."; }
-  body.scrollTop=body.scrollHeight;
+function sendAsk(){
+  const q=$("askQ").value.trim(), em=$("askEmail").value.trim();
+  if(!q){ $("askQ").focus(); return; }
+  if(!em || em.indexOf("@")<0){ $("askEmail").focus(); return; }
+  submitLead({email:em,message:q,role:"(question via app)",interest:"Has a question",source:"CTE Animation app — Ask a question"});
+  $("askBody").innerHTML='<div class="ask-a">✓ Got it — thank you. Someone from the studio will get back to you at <b>'+em.replace(/[<>&]/g,'')+'</b>.</div>';
+  $("askQ").parentNode.style.display="none";
 }
-$("askSend").onclick=askAthena; $("askQ").addEventListener("keydown",e=>{ if(e.key==="Enter") askAthena(); });
+$("askSend").onclick=sendAsk;
 
-// Waitlist (real: POSTs to the server)
+// Early-access waitlist → the same studio Sheet
 $("waitForm").onsubmit=async e=>{
   e.preventDefault();
-  const lead={name:$("wName").value,email:$("wEmail").value,school:$("wSchool").value,
-    pathway:$("wPathway").value,ts:new Date().toISOString()};
-  try{ await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}); }catch(err){}
+  const nm=$("wName").value, em=$("wEmail").value, sch=$("wSchool").value, pw=$("wPathway").value;
+  submitLead({name:nm,email:em,school:sch,role:pw,interest:"Early-access list",source:"CTE Animation app — Get early access"});
   $("waitForm").classList.add("hide");
   $("waitThanks").classList.remove("hide");
-  $("waitThanksLine").textContent=`You're on the list, ${lead.name.split(" ")[0]||"thanks"}. We'll be in touch about ${lead.pathway} early access.`;
+  $("waitThanksLine").textContent=`You're on the list, ${nm.split(" ")[0]||"thanks"}. We'll be in touch about ${pw} early access.`;
 };
 </script>
 </body>
