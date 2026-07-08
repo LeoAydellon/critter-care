@@ -355,6 +355,7 @@
   function cloudSaveAsks(){ if(!CLOUD)return; try{ CLOUD.setDoc(CLOUD.metaRef(),{asks:asks,updatedAt:Date.now()},{merge:true}); }catch(e){} }
   function cloudSaveDay(){ if(!CLOUD)return; try{ var k=todayKey(); Object.keys(state).forEach(function(tid){ try{ CLOUD.setDoc(CLOUD.dayTaskRef(k,tid), Object.assign({_tid:tid}, state[tid]||{})); }catch(e){} }); }catch(e){} }
   function saveModules(){
+    try{ localStorage.setItem('tend-edited','1'); }catch(e){}   // mark this device as having a real, user-built board
     if(DB){ idbSet('modules',MODULES).catch(function(){alert('Couldn\'t save — try removing a photo, or use fewer/smaller photos.');}); }
     else { try{ localStorage.setItem(LS_KEY,JSON.stringify(MODULES)); }catch(e){ alert('Couldn\'t save — the phone storage is full. Try fewer/smaller photos.'); } }
     cloudSaveModules();
@@ -386,14 +387,15 @@
     try{
       var qs = await CLOUD.getDocs(CLOUD.modulesCol());
       var cloudMods = modulesFromDocs(qs);
+      var edited=false; try{ edited = localStorage.getItem('tend-edited')==='1'; }catch(e){}
       if(cloudMods.length){
-        // adopt the shared board — UNLESS this device clearly has a richer setup (guard: don't let a
-        // thinner cloud copy clobber a fuller local one; push local up instead).
-        if(MODULES.length > cloudMods.length){ cloudSaveModules(); }
-        else { MODULES = cloudMods; if(DB){ try{ idbSet('modules',MODULES); }catch(e){} } }
-      } else {
-        cloudSaveModules();   // first device on this board → seed the cloud from what's on this device
+        // A shared board already exists → ADOPT it. Never overwrite a shared board with this device's
+        // local copy — that's the bug that let a blank phone wipe the board with its template.
+        MODULES = cloudMods; if(DB){ try{ idbSet('modules',MODULES); }catch(e){} }
+      } else if(edited){
+        cloudSaveModules();   // empty board + this device has a REAL user-built setup → seed it up
       }
+      // empty board + this device is only the pristine template → do nothing (don't seed a template)
       try{ var meta = await CLOUD.getDoc(CLOUD.metaRef()); if(meta.exists() && meta.data() && meta.data().asks){ asks=meta.data().asks; if(DB){ try{ idbSet('asks',asks); }catch(e){} } } }catch(e){}
       var ts = await CLOUD.getDocs(CLOUD.dayTasksCol(todayKey()));
       if(ts && ts.size>0){ state = stateFromDocs(ts); } else { cloudSaveDay(); }
