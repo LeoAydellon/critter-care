@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTE Companion — Animation Certification Prep</title>
+<style>
+  :root{
+    --bg:#0b0b0d; --panel:#15161a; --panel2:#1d1f25; --line:#2a2d36;
+    --ink:#f2f3f5; --mute:#9aa0ad; --gold:#E8BC40; --good:#3ecf8e; --bad:#ff6b6b;
+    --accent:#6c8cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+  header{text-align:center;padding:30px 0 10px}
+  .kicker{color:var(--gold);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12px}
+  h1{font-size:30px;line-height:1.15;margin:10px 0 8px}
+  h1 .em{color:var(--gold)}
+  .sub{color:var(--mute);font-size:16px;max-width:560px;margin:0 auto}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:18px 0}
+  .card h2{margin:0 0 4px;font-size:20px}
+  .card .lead{color:var(--mute);margin:0 0 16px;font-size:14px}
+  .btn{appearance:none;border:0;cursor:pointer;border-radius:10px;font-weight:700;font-size:15px;
+    padding:13px 20px;background:var(--gold);color:#000;transition:transform .05s ease, filter .15s}
+  .btn:hover{filter:brightness(1.05)} .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.block{display:block;width:100%}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:13px;margin-bottom:6px}
+  .tag{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--gold)}
+  .qtext{font-size:18px;font-weight:600;margin:6px 0 14px}
+  .opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);
+    color:var(--ink);border-radius:10px;padding:13px 15px;margin:8px 0;cursor:pointer;font-size:15px;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{border-color:var(--good);background:rgba(62,207,142,.12)}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,107,107,.12)}
+  .opt:disabled{cursor:default}
+  .explain{background:var(--panel2);border-left:3px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin-top:12px;font-size:14px;color:#d6d9e0;display:none}
+  .explain.show{display:block}
+  .bar{height:10px;border-radius:999px;background:var(--panel2);overflow:hidden;margin:6px 0}
+  .bar > i{display:block;height:100%;background:var(--gold)}
+  .score-big{font-size:56px;font-weight:800;line-height:1}
+  .ready{display:inline-block;padding:6px 14px;border-radius:999px;font-weight:700;font-size:14px;margin-top:8px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .std-row{margin:10px 0}
+  .std-row .lbl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:2px}
+  label.f{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+  input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+    border-radius:10px;padding:12px 14px;font-size:15px;font-family:inherit}
+  textarea{resize:vertical}
+  .hide{display:none}
+  .clipholder{background:#000;border:1px dashed var(--line);border-radius:12px;aspect-ratio:16/9;
+    display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:13px;margin:6px 0 12px;text-align:center;padding:10px}
+  .stepkick{color:var(--gold);font-weight:700;letter-spacing:.1em;font-size:12px}
+  .lbody{font-size:15px;color:#d6d9e0;margin:2px 0 8px}
+  .foot{text-align:center;color:var(--mute);font-size:12px;margin-top:26px}
+  .pill{font-size:11px;color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+  #askBtn{position:fixed;bottom:18px;right:18px;background:var(--gold);color:#000;border:0;border-radius:999px;padding:12px 18px;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.45);z-index:50;font-size:14px}
+  #askPanel{position:fixed;bottom:18px;right:18px;width:340px;max-width:92vw;height:460px;max-height:78vh;background:var(--panel);border:1px solid var(--line);border-radius:16px;display:none;flex-direction:column;overflow:hidden;z-index:51;box-shadow:0 12px 44px rgba(0,0,0,.55)}
+  .ask-head{background:var(--panel2);padding:12px 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+  #askClose{cursor:pointer;color:var(--mute);font-size:22px;line-height:1}
+  .ask-body{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+  .ask-a{background:var(--panel2);border-radius:10px 10px 10px 2px;padding:10px 12px;font-size:14px;align-self:flex-start;max-width:90%}
+  .ask-q{background:var(--gold);color:#000;border-radius:10px 10px 2px 10px;padding:10px 12px;font-size:14px;align-self:flex-end;max-width:90%}
+  .ask-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--line)}
+  .ask-input input{flex:1;margin:0}.ask-input button{background:var(--gold);color:#000;border:0;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">CTE Companion App · Digital Media &amp; Animation</div>
+    <h1>Driver's Ed for the <span class="em">Animation Certification</span></h1>
+    <p class="sub">The classroom companion that gets your CTE students ready to pass the Arizona Digital Animation Technical Skills Assessment — and shows you exactly who's ready.</p>
+  </header>
+
+  <div style="background:#17251a;border:1px solid #2f7a4d;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:14px;line-height:1.5">
+    👋 <b>This is a live sample</b> of the student app — go ahead and tap through it. Want it for your classroom, or a custom one built for your subject? <b>Scroll to “Work with us” at the bottom</b> and we'll show you how it works for your school.
+  </div>
+
+  <!-- LEARN -->
+  <div class="card" id="learnCard">
+    <div class="q-meta"><span class="stepkick">STEP 1 · LEARN</span><span class="pill" id="learnCount"></span></div>
+    <h2>Learn it first</h2>
+    <p class="lead">Short, plain-English micro-lessons on each standard — the exact stuff the test checks. ~60 seconds each. <i>(In the full app, every lesson plays one of the studio's real animation clips — the part no textbook can do.)</i></p>
+    <button class="btn block" id="learnStart">Start learning</button>
+    <div id="lessonArea" class="hide">
+      <div class="q-meta"><span id="lProgress"></span><span class="tag" id="lStd"></span></div>
+      <div class="qtext" id="lTitle"></div>
+      <div class="clipholder" id="lClip">🎬 animation clip plays here in the full app</div>
+      <div class="lbody" id="lBody"></div>
+      <div class="explain show" id="lKey"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn ghost" id="lPrev">← Back</button>
+        <button class="btn" id="lNext" style="flex:1">Next →</button>
+      </div>
+    </div>
+    <div id="learnDone" class="hide" style="text-align:center;padding:8px 0">
+      <div class="score-big" style="font-size:38px">✓</div>
+      <p class="lead">Lessons done — now let's see what stuck.</p>
+      <button class="btn" id="toTestBtn">Take the readiness check →</button>
+    </div>
+  </div>
+
+  <!-- DEMO -->
+  <div class="card" id="demoCard">
+    <div class="q-meta"><span class="stepkick">STEP 2 · TEST</span><span class="pill">readiness check</span></div>
+    <h2>Try the readiness check</h2>
+    <p class="lead">Questions built straight from the Arizona Digital Animation standards (10.0304.00). Answer a few — get an instant readiness score and see exactly which standards a student still needs to study.</p>
+    <input id="stuCode" placeholder="Class code from your teacher (or type DEMO to try it)" style="margin-bottom:8px;text-transform:uppercase">
+    <input id="stuName" placeholder="Your name (so your teacher sees your score)" style="margin-bottom:10px">
+    <button class="btn block" id="startBtn">Start the assessment</button>
+
+    <div id="quizArea" class="hide">
+      <div class="q-meta"><span id="qProgress"></span><span class="tag" id="qStd"></span></div>
+      <div class="qtext" id="qText"></div>
+      <div id="opts"></div>
+      <div class="explain" id="explain"></div>
+      <button class="btn block hide" id="nextBtn" style="margin-top:14px">Next</button>
+    </div>
+
+    <div id="results" class="hide">
+      <div style="text-align:center">
+        <div class="score-big" id="scorePct">0%</div>
+        <div class="ready" id="readyBadge"></div>
+        <p class="lead" id="readyLine" style="margin-top:12px"></p>
+      </div>
+      <h3 style="margin:18px 0 4px;font-size:16px">By standard — where they stand</h3>
+      <div id="stdBreakdown"></div>
+      <div id="recoBox" style="margin-top:14px"></div>
+      <div class="row" style="margin-top:18px">
+        <button class="btn ghost" id="retryBtn">Try again</button>
+        <button class="btn" id="toWaitBtn">I want this for my class →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI TUTOR (coming soon — hidden for booth demo) -->
+  <div class="card" id="tutorCard">
+    <div class="q-meta"><span class="stepkick">AI TUTOR</span><span class="pill">coming soon</span></div>
+    <h2>AI Tutor — coming soon</h2>
+    <p class="lead">A built-in tutor that explains any animation question in plain language, on demand — like a teacher who never gets tired of the question. Rolling out with the full version.</p>
+  </div>
+
+  <!-- WAITLIST -->
+  <div class="card" id="waitCard">
+    <h2>Get early access</h2>
+    <p class="lead">CTE Companion Apps are coming. <b>Animation is first.</b> More pathways may follow. Join the early-access list and we'll bring it to your classroom.</p>
+    <form id="waitForm">
+      <label class="f">Your name</label>
+      <input required id="wName" placeholder="Jane Doe" autocomplete="name">
+      <label class="f">Email</label>
+      <input required type="email" id="wEmail" placeholder="you@district.org" autocomplete="email">
+      <label class="f">School / District</label>
+      <input required id="wSchool" placeholder="Verde Tech High School">
+      <label class="f">What pathway do you teach?</label>
+      <select id="wPathway">
+        <option>Animation</option><option>Digital Media</option><option>Video Production</option>
+        <option>Graphic Design</option><option>Game Design</option><option>Agriculture</option>
+        <option>Veterinary Science</option><option>Welding</option><option>Construction</option>
+        <option>Automotive</option><option>Health Sciences</option><option>Nursing</option>
+        <option>Culinary</option><option>Business</option><option>Entrepreneurship</option>
+        <option>Computer Science</option><option>Other</option>
+      </select>
+      <button class="btn block" style="margin-top:18px" type="submit">Join the early-access list</button>
+    </form>
+    <div id="waitThanks" class="hide" style="text-align:center;padding:10px 0">
+      <div class="score-big" style="font-size:40px">✓</div>
+      <p class="lead" id="waitThanksLine"></p>
+    </div>
+  </div>
+
+  <!-- WORK WITH US -->
+  <div class="card" id="contactCard">
+    <div class="q-meta"><span class="stepkick">WORK WITH US</span><span class="pill">Studio Beltran</span></div>
+    <h2>Want this at your school?</h2>
+    <p class="lead">Two ways we can help — tap one and it starts an email to Leo (it'll send the moment you're back online):</p>
+    <a class="btn block" href="mailto:leo@studiobeltran.com?subject=Bring%20the%20Animation%20program%20to%20our%20school&body=Hi%20Leo%2C%20I%20saw%20the%20CTE%20Companion%20demo%20at%20the%20ACTEAZ%20conference%20and%20I%27d%20like%20to%20talk%20about%20bringing%20the%20animation%20program%20to%20our%20school.%0A%0AName%3A%20%0ASchool%2FDistrict%3A%20%0ABest%20way%20to%20reach%20me%3A%20" style="text-decoration:none;display:block;text-align:center;margin-bottom:10px">🎬 &nbsp;Bring this Animation program to my school</a>
+    <a class="btn block ghost" href="mailto:leo@studiobeltran.com?subject=Custom%20curriculum%20build&body=Hi%20Leo%2C%20I%20saw%20your%20demo%20at%20ACTEAZ.%20I%27d%20like%20to%20talk%20about%20designing%20a%20custom%20curriculum%20for%20my%20program%20%28it%20does%20not%20have%20to%20be%20animation%29.%0A%0AName%3A%20%0ASchool%2FDistrict%3A%20%0AWhat%20subject%2Fpathway%3A%20%0ABest%20way%20to%20reach%20me%3A%20" style="text-decoration:none;display:block;text-align:center;margin-bottom:14px">✏️ &nbsp;Design a custom curriculum (any subject)</a>
+    <div class="explain show" style="text-align:center;line-height:1.7">
+      <b>Studio Beltran</b> · Leo Beltran<br>
+      ✉️ <a href="mailto:leo@studiobeltran.com" style="color:var(--gold)">leo@studiobeltran.com</a><br>
+      🌐 <a href="https://leo0987.wixsite.com/mysite/cte-curriculum" target="_blank" rel="noopener" style="color:var(--gold)">Book a consultation &amp; see the reel</a>
+      <div style="color:var(--mute);font-size:12px;margin-top:10px">The email buttons work offline (they send once you're back online). The consultation link opens when you're on wifi or data.</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="pill">PILOT</span> &nbsp; Built by Studio Beltran / DocsAnimation · maps to AZ Digital Animation 10.0304.00 · <a href="/guide" style="color:var(--mute)">Teacher guide</a>
+  </div>
+</div>
+
+<!-- floating assistant — "Questions? Ask Athena" -->
+<button id="askBtn">💬 Questions? Ask Athena</button>
+<div id="askPanel">
+  <div class="ask-head"><span>Ask Athena</span><span id="askClose">×</span></div>
+  <div class="ask-body" id="askBody"><div class="ask-a">Hi! I'm Athena. Ask me anything about this app — what it is, how to use it in class, anything. Prefer a real person? Email <b>leo@studiobeltran.com</b> or call/text <b>(928) 517-7377</b>.</div></div>
+  <div class="ask-input"><input id="askQ" placeholder="Type your question..."><button id="askSend">Send</button></div>
+</div>
+
+<script>
+// ——— Question bank: every item tagged to an Arizona standard (10.0304.00) ———
+const BANK = [
+ {std:"5.0", name:"Pre-Production · 12 Principles", m:"5.9",
+  q:'In the 12 principles of animation, "squash and stretch" exists mainly to communicate what about an object?',
+  opts:["Its weight, flexibility, and mass","Its color temperature","Its file size","Its render time"],
+  a:0, why:"Squash & stretch gives a sense of weight and flexibility. A bouncing ball squashing on impact and stretching as it falls reads as alive; a rigid ball reads as a brick."},
+ {std:"5.0", name:"Pre-Production · 12 Principles", m:"5.9",
+  q:"Which of these is NOT one of the 12 principles of animation?",
+  opts:["Anticipation","Secondary Action","Photorealistic Rendering","Follow-Through and Overlapping Action"],
+  a:2, why:"Rendering is a production step, not one of Disney's 12 principles. The 12 are about how motion is performed (anticipation, follow-through, etc.)."},
+ {std:"6.0", name:"Modeling/Lighting · 3-Point Light", m:"6.10",
+  q:"A standard three-point lighting setup is made of which three lights?",
+  opts:["Key, Fill, Back (Rim)","Red, Green, Blue","Spot, Flood, Laser","Ambient, Caustic, Volumetric"],
+  a:0, why:"Key (main), Fill (softens shadows), and Back/Rim (separates the subject from the background) are the three classic lights."},
+ {std:"7.0", name:"Rigging/Animation · FK/IK", m:"7.4",
+  q:"You need a character's foot to stay planted on the ground while the leg moves. Which rig solution fits best?",
+  opts:["Inverse Kinematics (IK)","Forward Kinematics (FK)","UV unwrapping","Chroma key"],
+  a:0, why:"IK lets you place the end (the foot) at a target and solves the joints to reach it — ideal for planted feet. FK rotates each joint down the chain instead."},
+ {std:"6.0", name:"Production Pipeline", m:"6.1",
+  q:"In a standard 3D pipeline, which step comes BEFORE animation?",
+  opts:["Rigging","Compositing","Final render","Color grading"],
+  a:0, why:"A model must be rigged (given a skeleton/controls) before it can be animated. Compositing, rendering and grading all come later."},
+ {std:"2.0", name:"IP & Copyright Law", m:"2.2",
+  q:'A student uses a short clip of a copyrighted film for classroom critique. This is most likely protected under:',
+  opts:["Fair use","Public domain","A trademark","A patent"],
+  a:0, why:"Fair use permits limited use of copyrighted material for purposes like criticism, comment, and education — exactly a classroom critique."},
+ {std:"9.0", name:"Delivery · File Formats", m:"9.1",
+  q:"You need a still image with a transparent background and no quality loss. Which format?",
+  opts:["PNG","JPEG","BMP","A blurred GIF"],
+  a:0, why:"PNG is lossless and supports alpha (transparency). JPEG is lossy and has no transparency."},
+ {std:"8.0", name:"Post-Production · Keying", m:"8.4",
+  q:"Removing a green screen behind an actor to drop in a new background is called:",
+  opts:["Chroma keying","Rigging","Rotoscoping","Tessellation"],
+  a:0, why:"Chroma keying removes a specific color range (green/blue) so a new background can show through."},
+ {std:"6.0", name:"Modeling · UV Mapping", m:"6.4",
+  q:"What does UV mapping do?",
+  opts:["Flattens a 3D surface so a 2D texture can wrap onto it","Sets the render resolution","Defines the frame rate","Compresses audio"],
+  a:0, why:"UV mapping unwraps a 3D model into 2D coordinates (U,V) so a flat texture image lines up correctly on the surface."},
+ {std:"5.0", name:"Pre-Production · Storyboards", m:"5.10",
+  q:"The primary purpose of a storyboard is to:",
+  opts:["Plan shots, staging, and timing before production","Render the final frames","Rig the characters","Encode the export codec"],
+  a:0, why:"A storyboard maps the sequence, camera, and timing up front — catching problems before expensive production starts."},
+ {std:"7.0", name:"Rendering Methods", m:"7.8",
+  q:"Compared to offline rendering, real-time rendering is best described as:",
+  opts:["Instant and interactive (e.g., games), trading some quality for speed","Always higher quality per frame","Only usable for audio","The same thing as compositing"],
+  a:0, why:"Real-time engines render instantly for interactivity (games, VR); offline rendering takes longer per frame but can reach higher fidelity."},
+ {std:"4.0", name:"Technology · File Management", m:"4.3",
+  q:"Why do studios use strict naming conventions and version control on project files?",
+  opts:["To avoid lost work and keep a team in sync","To increase polygon counts","To make renders slower","It's only for audio files"],
+  a:0, why:"Consistent naming + versioning prevents overwrites, lets a team collaborate, and makes assets findable — a core professional practice (Std 4.3 / 5.4)."},
+ {std:"1.0", name:"Industry · Business Models", m:"1.12",
+  q:"A freelance animator taking short contract gigs instead of a salaried staff job is an example of:",
+  opts:["The gig economy","A pension plan","A trademark","Public domain"],
+  a:0, why:"The gig economy = independent, project-based work rather than long-term salaried employment (Std 1.12)."},
+ {std:"1.0", name:"Industry · Safety", m:"1.14",
+  q:"OSHA standards in a media workplace are mainly about:",
+  opts:["Worker health and safety","Render quality","Copyright","Color theory"],
+  a:0, why:"OSHA = Occupational Safety and Health — protecting workers on the job (Std 1.14)."},
+ {std:"1.0", name:"Industry · Budgeting", m:"1.8",
+  q:"On a project budget, which is a direct LABOR cost?",
+  opts:["The animators' hours","The office rent","A software subscription","Electricity"],
+  a:0, why:"Labor cost = pay for the people doing the work (animator hours). Rent/software/utilities are overhead (Std 1.8)."},
+ {std:"3.0", name:"Client Practices · Communication", m:"3.2",
+  q:"A client gives vague feedback like 'make it pop more.' Your best first move is to:",
+  opts:["Ask clarifying questions to pin down what they mean","Redo the whole thing on a guess","Ignore it and submit as-is","Tell them they're wrong"],
+  a:0, why:"Confirming the ask before working saves rework — core client communication (Std 3.2/3.5)."},
+ {std:"3.0", name:"Client Practices · Active Listening", m:"3.3",
+  q:'"Active listening" means:',
+  opts:["Fully focusing, then confirming you understood","Waiting for your turn to talk","Multitasking while they speak","Only reading their emails"],
+  a:0, why:"Active listening = give full attention and reflect back understanding before responding (Std 3.3)."},
+ {std:"10.0", name:"Quality Assurance", m:"10.1",
+  q:"Good quality assurance on a production means you:",
+  opts:["Check work against the standard throughout, not just at the end","Only review it after it ships","Skip review to save time","Let the client catch the mistakes"],
+  a:0, why:"QA is continuous — catching issues during production is far cheaper than after delivery (Std 10.1)."},
+ {std:"10.0", name:"QA · Project Review", m:"10.2",
+  q:"A project post-mortem (review after finishing) is for:",
+  opts:["Finding what to improve next time","Assigning blame","Billing the client","Deleting the files"],
+  a:0, why:"A post-mortem captures lessons to improve the next project's workflow (Std 10.2)."},
+ {std:"11.0", name:"Present · Demo Reel", m:"11.1",
+  q:"A strong demo reel should:",
+  opts:["Lead with your best, most relevant work","Include everything you've ever made","Be as long as possible","Hide your specialty"],
+  a:0, why:"Reels are judged in seconds — put your strongest, role-relevant work first (Std 11.1)."},
+ {std:"11.0", name:"Present · Animatic", m:"11.5",
+  q:"An animatic is:",
+  opts:["Storyboards timed to audio — a rough moving cut","A finished rendered film","A 3D model","A lighting rig"],
+  a:0, why:"An animatic times the storyboard to sound/music so you can feel the pacing before animating (Std 11.5)."},
+ {std:"6.0", name:"Modeling · PBR", m:"6.6",
+  q:"Physically Based Rendering (PBR) is designed to:",
+  opts:["Make materials react to light realistically","Lower the frame rate","Replace storyboards","Compress audio"],
+  a:0, why:"PBR models how real surfaces respond to light, so materials look consistent under any lighting (Std 6.6)."},
+ {std:"5.0", name:"Pre-Production · Concept Art", m:"5.8",
+  q:"Silhouette sketches and thumbnails are used to:",
+  opts:["Quickly explore designs before committing","Render the final shot","Encode the export","Rig the skeleton"],
+  a:0, why:"Fast, loose exploration finds the strongest design cheaply before detailed work begins (Std 5.8)."},
+ {std:"9.0", name:"Delivery · VR/AR", m:"9.3",
+  q:"To deliver an interactive 3D scene to a VR headset, you'd target:",
+  opts:["A real-time engine / VR format","A printed PDF","A JPEG","A spreadsheet"],
+  a:0, why:"VR/AR needs real-time, interactive rendering — not a static file (Std 9.3)."},
+];
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+const QN = 12; // questions per run
+let quiz=[], idx=0, answers=[];
+
+const $=id=>document.getElementById(id);
+
+// ——— LEARN mode: micro-lessons mapped to the same standards ———
+const LESSONS=[
+ {std:"5.0", topic:"Squash & Stretch (the 12 Principles)",
+  body:"The #1 of the 12 principles. When something moves with force it deforms — squashing when it hits, stretching as it flies — then snaps back. The trick: keep the VOLUME the same. If it squashes wide, it also gets shorter, so it never looks like it's growing or shrinking.",
+  key:"It sells weight and life. A ball that squashes on impact feels alive; a stiff ball feels like a brick."},
+ {std:"6.0", topic:"Three-Point Lighting",
+  body:"Three lights do the work: the KEY (your main light, sets the look), the FILL (softer, opposite side, lifts the dark shadows so they aren't harsh), and the BACK/RIM (behind the subject, puts a bright edge around them so they pop off the background).",
+  key:"Key = main · Fill = softens shadows · Back = separates subject from background."},
+ {std:"7.0", topic:"FK vs IK Rigging",
+  body:"Two ways to pose a limb. Forward Kinematics (FK): you rotate each joint down the chain (shoulder → elbow → wrist) — great for a free arc like a waving arm. Inverse Kinematics (IK): you grab the END (hand or foot) and the computer solves the joints — great for a foot planted on the ground.",
+  key:"Foot needs to stay planted? IK. Free-swinging arc? FK."},
+ {std:"6.0", topic:"The Production Pipeline",
+  body:"3D work happens in order: Model (build it) → Texture (paint it) → Rig (give it a skeleton) → Animate (move it) → Light → Render (final frames) → Composite (combine + polish). You can't animate before you rig — there's nothing to move yet.",
+  key:"Rigging always comes BEFORE animation."},
+ {std:"2.0", topic:"Copyright & Fair Use",
+  body:"Other people's work is protected by copyright — you can't just grab it. BUT 'fair use' allows limited use without permission for education, commentary, criticism, or parody. A class critiquing a short film clip is usually fair use; selling a poster with a movie character is not.",
+  key:"Fair use = limited use for education/commentary. Not a free pass to use anything."},
+ {std:"9.0", topic:"File Formats",
+  body:"Match the format to the job. PNG = lossless + supports transparency (logos, UI, anything needing a clear background). JPEG = smaller but lossy, no transparency (photos). MP4 / H.264 = the safe video format that plays everywhere.",
+  key:"Need a transparent background with no quality loss? PNG."},
+ {std:"8.0", topic:"Chroma Keying (Green Screen)",
+  body:"Shoot in front of a solid green (or blue) screen, then software removes that exact color and drops in a new background. It's green because skin tones have almost no green in them, so it won't accidentally erase the actor.",
+  key:"Removing a green screen to swap the background = chroma keying."},
+ {std:"6.0", topic:"UV Mapping",
+  body:"A 3D model's surface is curved; a texture image is flat. UV mapping 'unwraps' the model into a flat layout — like peeling an orange and flattening the peel — so a 2D image lines up correctly on the 3D surface without stretching.",
+  key:"UVs let a flat image wrap onto a 3D model cleanly."},
+ {std:"5.0", topic:"Storyboards",
+  body:"Before any expensive animating, you draw the story shot-by-shot: what's in frame, the camera angle, and the timing. It's the cheapest place to fix problems — a bad idea caught in a storyboard costs a pencil; caught after animating it costs weeks.",
+  key:"Storyboards plan shots + timing up front, so production time isn't wasted."},
+ {std:"7.0", topic:"Real-Time vs Offline Rendering",
+  body:"Real-time rendering draws frames instantly so you can interact (video games, VR) — fast, trades some quality. Offline rendering takes minutes-to-hours per frame but reaches movie-level quality (Pixar films). Pick based on whether the audience needs to interact.",
+  key:"Games = real-time (instant). Film = offline (higher quality, slower)."},
+ {std:"4.0", topic:"File Management & Version Control",
+  body:"Studios use strict, consistent file names and versions (v01, v02...) so a team never overwrites each other's work and can always roll back. 'final_FINAL_2' is how projects get lost.",
+  key:"Consistent names + versions = no lost work, team stays in sync."},
+ {std:"1.0", topic:"Business Models (the Gig Economy)",
+  body:"Media work comes in models: salaried staff jobs, freelance/contract gigs (the 'gig economy'), running your own studio (entrepreneurship), and social-media monetization. Many animators mix several at once.",
+  key:"Gig economy = independent, project-by-project work — not a salaried job."},
+ {std:"1.0", topic:"Workplace Safety (OSHA)",
+  body:"OSHA (Occupational Safety & Health Administration) sets the rules that keep workers safe on the job — ergonomics, equipment, hazards. Even a studio has safety standards to follow.",
+  key:"OSHA = worker health and safety."},
+ {std:"1.0", topic:"Budgeting a Project",
+  body:"A project budget splits into labor (people's hours — usually the biggest cost) and overhead (rent, software, utilities). Knowing the difference is how you price a job and don't lose money.",
+  key:"Labor = pay for hours worked. Rent/software/electricity = overhead."},
+ {std:"3.0", topic:"Handling Client Feedback",
+  body:"Clients often give vague notes like 'make it pop.' Don't guess and redo everything — ask clarifying questions first to pin down exactly what they mean. It saves hours of wrong work.",
+  key:"Vague feedback? Ask to clarify before you change anything."},
+ {std:"3.0", topic:"Active Listening",
+  body:"Active listening means fully focusing on the person, then reflecting back what you heard to confirm ('So you want it brighter and faster — right?'). It prevents miscommunication.",
+  key:"Active listening = focus fully, then confirm you understood."},
+ {std:"10.0", topic:"Quality Assurance (QA)",
+  body:"QA means checking work against the standard all the way through production, not just at the end. Catching a problem early costs minutes; catching it after delivery costs the client's trust.",
+  key:"QA is continuous — check throughout, don't wait for the end."},
+ {std:"10.0", topic:"Project Reviews (Post-Mortems)",
+  body:"After a project ships, the team reviews what worked and what didn't — a 'post-mortem.' The goal isn't blame; it's a better workflow next time.",
+  key:"A post-mortem finds what to improve, not who to blame."},
+ {std:"11.0", topic:"Building a Demo Reel",
+  body:"A demo reel is your highlight reel. Recruiters watch seconds — so lead with your strongest, most relevant work, keep it tight, and cut anything weak. Quality over quantity.",
+  key:"Reel = your best, most relevant work first. Short and strong."},
+ {std:"11.0", topic:"Animatics",
+  body:"An animatic is your storyboard edited together and timed to audio/music — a rough moving version of the film. It lets you feel the pacing before spending weeks animating.",
+  key:"Animatic = storyboard timed to sound; tests pacing early."},
+ {std:"6.0", topic:"Physically Based Rendering (PBR)",
+  body:"PBR makes digital materials respond to light the way real ones do — so metal looks like metal and skin like skin under any lighting. It's the modern standard for realistic 3D.",
+  key:"PBR = materials react to light realistically, in any scene."},
+ {std:"5.0", topic:"Concept Art & Silhouettes",
+  body:"Before detailed work, artists rough out lots of quick thumbnails and silhouettes to explore designs fast and cheap — finding the strongest idea before committing real time to it.",
+  key:"Thumbnails/silhouettes explore designs fast, before committing."},
+ {std:"9.0", topic:"Delivering for VR / AR",
+  body:"For VR or AR the audience interacts in real time, so you deliver to a real-time engine in a VR-ready format — not a flat video or image. Different target, different export.",
+  key:"VR/AR = real-time, interactive delivery — not a flat file."},
+];
+let li=0;
+$("learnCount").textContent=LESSONS.length+" lessons";
+$("learnStart").onclick=()=>{ li=0; $("learnStart").classList.add("hide"); $("lessonArea").classList.remove("hide"); renderLesson(); };
+function renderLesson(){
+  const l=LESSONS[li];
+  $("lProgress").textContent=`Lesson ${li+1} of ${LESSONS.length}`;
+  $("lStd").textContent=`Standard ${l.std}`;
+  $("lTitle").textContent=l.topic;
+  $("lBody").textContent=l.body;
+  $("lKey").innerHTML="<b>Key point:</b> "+l.key;
+  $("lPrev").style.visibility = li===0 ? "hidden":"visible";
+  $("lNext").textContent = li===LESSONS.length-1 ? "Done ✓":"Next →";
+}
+$("lNext").onclick=()=>{ if(li<LESSONS.length-1){li++;renderLesson();} else {$("lessonArea").classList.add("hide");$("learnDone").classList.remove("hide");} };
+$("lPrev").onclick=()=>{ if(li>0){li--;renderLesson();} };
+$("toTestBtn").onclick=()=>{ $("demoCard").scrollIntoView({behavior:"smooth"}); setTimeout(()=>$("startBtn").click(),400); };
+
+let studentName="", studentClass="DEMO";
+// One-click join: if the link has ?c=CODE, pre-fill the class so students only type their name.
+(function(){ const c=new URLSearchParams(location.search).get('c');
+  if(c && $("stuCode")){ $("stuCode").value=c.toUpperCase(); $("stuCode").style.display="none";
+    const lbl=document.createElement('p'); lbl.className='lead'; lbl.style.margin='0 0 8px';
+    lbl.innerHTML="Joining class <b style='color:var(--gold)'>"+c.toUpperCase()+"</b> — just type your name 👇";
+    $("stuName").parentNode.insertBefore(lbl,$("stuName")); }
+})();
+$("startBtn").onclick=()=>{
+  const nm=($("stuName")?$("stuName").value:"").trim();
+  if(!nm){ $("stuName").style.borderColor="var(--bad)"; $("stuName").placeholder="Please enter your name first"; return; }
+  studentName=nm;
+  studentClass=(($("stuCode")&&$("stuCode").value)||"DEMO").trim().toUpperCase()||"DEMO";
+  quiz=shuffle(BANK).slice(0,QN); idx=0; answers=[];
+  if($("stuName")) $("stuName").classList.add("hide");
+  if($("stuCode")) $("stuCode").classList.add("hide");
+  $("startBtn").classList.add("hide"); $("quizArea").classList.remove("hide"); render(); };
+
+function render(){
+  const item=quiz[idx];
+  $("qProgress").textContent=`Question ${idx+1} of ${quiz.length}`;
+  $("qStd").textContent=`Standard ${item.std} · ${item.name}`;
+  $("qText").textContent=item.q;
+  const ob=$("opts"); ob.innerHTML="";
+  $("explain").classList.remove("show"); $("nextBtn").classList.add("hide");
+  // Shuffle answer POSITIONS every render so the correct one lands anywhere — no pattern.
+  item._shuf = shuffle(item.opts.map((t,i)=>({t, ok:i===item.a})));
+  item._shuf.forEach((o,k)=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=o.t;
+    b.onclick=()=>choose(k,b); ob.appendChild(b);
+  });
+}
+function choose(k,btn){
+  const item=quiz[idx];
+  const picked=item._shuf[k];
+  answers.push({std:item.std, correct:picked.ok});
+  [...$("opts").children].forEach((b,j)=>{
+    b.disabled=true;
+    if(item._shuf[j].ok) b.classList.add("correct");
+    if(j===k && !picked.ok) b.classList.add("wrong");
+  });
+  const ex=$("explain"); ex.innerHTML=(picked.ok?"<b>Correct.</b> ":"<b>Not quite.</b> ")+item.why;
+  ex.classList.add("show");
+  $("nextBtn").classList.remove("hide");
+  $("nextBtn").textContent = idx===quiz.length-1 ? "See readiness score" : "Next";
+}
+$("nextBtn").onclick=()=>{ idx++; if(idx<quiz.length) render(); else showResults(); };
+
+function showResults(){
+  $("quizArea").classList.add("hide"); $("results").classList.remove("hide");
+  const correct=answers.filter(a=>a.correct).length, pct=Math.round(correct/answers.length*100);
+  $("scorePct").textContent=pct+"%";
+  const badge=$("readyBadge"), line=$("readyLine");
+  if(pct>=80){badge.textContent="READY";badge.style.background="rgba(62,207,142,.16)";badge.style.color="var(--good)";
+    line.textContent="On track to pass. Keep sharp on any weak standards below.";}
+  else if(pct>=60){badge.textContent="ALMOST THERE";badge.style.background="rgba(232,188,64,.16)";badge.style.color="var(--gold)";
+    line.textContent="Close. Focus study on the lower standards below and re-test.";}
+  else{badge.textContent="NEEDS WORK";badge.style.background="rgba(255,107,107,.16)";badge.style.color="var(--bad)";
+    line.textContent="Not ready yet — but now you know exactly where to focus.";}
+  // per-standard breakdown
+  const byStd={};
+  answers.forEach(a=>{(byStd[a.std]=byStd[a.std]||{c:0,t:0}); byStd[a.std].t++; if(a.correct)byStd[a.std].c++;});
+  const names={"2.0":"IP & Copyright","4.0":"Technology/File Mgmt","5.0":"Pre-Production","6.0":"Modeling/Texture/Light","7.0":"Rigging/Anim/Render","8.0":"Post-Production","9.0":"Delivery"};
+  const box=$("stdBreakdown"); box.innerHTML="";
+  const weak=[];
+  Object.keys(byStd).sort().forEach(s=>{
+    const o=byStd[s], p=Math.round(o.c/o.t*100); if(p<100)weak.push(names[s]||("Standard "+s));
+    box.insertAdjacentHTML("beforeend",
+     `<div class="std-row"><div class="lbl"><span>Std ${s} · ${names[s]||""}</span><span>${o.c}/${o.t}</span></div>
+      <div class="bar"><i style="width:${p}%;background:${p>=80?'var(--good)':p>=50?'var(--gold)':'var(--bad)'}"></i></div></div>`);
+  });
+  $("recoBox").innerHTML = weak.length
+    ? `<div class="explain show"><b>Study recommendation:</b> go back to <b>Learn mode</b> ↑ and re-watch ${weak.slice(0,3).join(", ")}, then re-test. The full app does this automatically — assigns targeted lessons + the AI tutor on exactly these weak spots.</div>`
+    : `<div class="explain show"><b>Clean sweep.</b> Every standard mastered on this sample. The full app keeps them sharp across all 11.</div>`;
+  // Send the result to the teacher dashboard (same origin)
+  const payload={code:studentClass||"DEMO", name:studentName||"(no name)", score:pct, correct, total:answers.length,
+    standards:byStd, weak, ts:new Date().toISOString()};
+  fetch("/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(()=>{ const n=document.createElement("p"); n.className="lead";
+      n.style.cssText="color:var(--good);margin-top:10px"; n.textContent="✓ Score sent to your teacher.";
+      $("recoBox").appendChild(n); }).catch(()=>{});
+}
+$("retryBtn").onclick=()=>{ $("results").classList.add("hide"); $("startBtn").classList.remove("hide"); };
+$("toWaitBtn").onclick=()=>$("waitCard").scrollIntoView({behavior:"smooth"});
+
+// AI Tutor — asks Athena One's local model (free, no API bill)
+const TCHIPS=["What is squash and stretch?","FK vs IK?","What's a key light?","What is chroma keying?"];
+const tchips=$("tChips");
+TCHIPS.forEach(c=>{ const b=document.createElement("button"); b.className="opt"; b.style.cssText="width:auto;margin:0;padding:6px 11px;font-size:12px"; b.textContent=c; b.onclick=()=>{ $("tQ").value=c; askTutor(); }; tchips.appendChild(b); });
+async function askTutor(){
+  const q=$("tQ").value.trim(); if(!q) return;
+  const a=$("tA"); a.classList.add("show"); a.textContent="Thinking…"; $("tAsk").disabled=true;
+  try{ const r=await fetch("/api/tutor",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q})});
+    const d=await r.json(); a.textContent=d.answer; }
+  catch(e){ a.textContent="The tutor's offline right now. Try again in a moment."; }
+  $("tAsk").disabled=false;
+}
+$("tAsk").onclick=askTutor;
+
+// Floating site assistant — fields product questions, escalates to a person
+$("askBtn").onclick=()=>{ $("askPanel").style.display="flex"; $("askBtn").style.display="none"; $("askQ").focus(); };
+$("askClose").onclick=()=>{ $("askPanel").style.display="none"; $("askBtn").style.display="block"; };
+async function askAthena(){
+  const q=$("askQ").value.trim(); if(!q) return; const body=$("askBody");
+  const qd=document.createElement('div'); qd.className='ask-q'; qd.textContent=q; body.appendChild(qd);
+  $("askQ").value=""; const ad=document.createElement('div'); ad.className='ask-a'; ad.textContent="…"; body.appendChild(ad); body.scrollTop=body.scrollHeight;
+  try{ const r=await fetch("/api/assistant",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q})});
+    const d=await r.json(); ad.textContent=d.answer; }
+  catch(e){ ad.textContent="Email leo@studiobeltran.com and a real person will help."; }
+  body.scrollTop=body.scrollHeight;
+}
+$("askSend").onclick=askAthena; $("askQ").addEventListener("keydown",e=>{ if(e.key==="Enter") askAthena(); });
+
+// Waitlist (real: POSTs to the server)
+$("waitForm").onsubmit=async e=>{
+  e.preventDefault();
+  const lead={name:$("wName").value,email:$("wEmail").value,school:$("wSchool").value,
+    pathway:$("wPathway").value,ts:new Date().toISOString()};
+  try{ await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}); }catch(err){}
+  $("waitForm").classList.add("hide");
+  $("waitThanks").classList.remove("hide");
+  $("waitThanksLine").textContent=`You're on the list, ${lead.name.split(" ")[0]||"thanks"}. We'll be in touch about ${lead.pathway} early access.`;
+};
+</script>
+</body>
+</html>
