@@ -223,10 +223,14 @@
     };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    // farm id lives in the URL (?farm=xxx). No farm → make a new one and put it in the URL.
+    // farm id: from the URL (?farm=xxx) if shared with you; else the one this device already uses
+    // (saved locally so re-opening always returns to the SAME board); else make a new one.
     const u = new URL(location.href);
     let fid = u.searchParams.get('farm');
-    if(!fid){ fid = 'farm-' + Math.random().toString(36).slice(2,9); u.searchParams.set('farm', fid); history.replaceState(null,'',u); }
+    try { if(!fid){ fid = localStorage.getItem('tend-farm') || ''; } } catch(e){}
+    if(!fid){ fid = 'farm-' + Math.random().toString(36).slice(2,9); }
+    try { localStorage.setItem('tend-farm', fid); } catch(e){}
+    if(u.searchParams.get('farm') !== fid){ u.searchParams.set('farm', fid); history.replaceState(null,'',u); }
     const sane = function(s){ return String(s).replace(/[^a-zA-Z0-9_-]/g,'_'); };
     // Each AREA is its own document (so photo-heavy setups never hit the 1MB per-doc cap),
     // and each day's per-task state is its own document too.
