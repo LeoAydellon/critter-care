@@ -461,8 +461,8 @@
   function applyRestore(text){
     var data; try{data=JSON.parse(text);}catch(e){alert("That doesn't look like a valid backup. Paste the whole backup text, or pick the .json file.");return;}
     if(!data||!Array.isArray(data.modules)){alert('This backup is missing its areas — nothing was restored.');return;}
-    var when=data.exportedAt?('the backup from '+new Date(data.exportedAt).toLocaleString()):'this backup';
-    if(!confirm('Restore '+data.modules.length+' area(s) from '+when+'?\n\nThis replaces what is in the app now.'))return;
+    // NOTE: no confirm() gate — iOS standalone (home-screen) apps silently swallow confirm(),
+    // which made Restore look "stuck". Applying directly.
     MODULES=data.modules;
     if(data.state&&typeof data.state==='object')state=data.state;
     if(data.asks&&typeof data.asks==='object')asks=data.asks;
