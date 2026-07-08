@@ -184,6 +184,79 @@
     </div>
   </div>
 
+
+  <!-- TEACHER VIEW (class monitor) -->
+  <style>
+    #teacherCard .tv-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 6px}
+    #teacherCard .tv-stat{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+    #teacherCard .tv-stat .n{font-size:26px;font-weight:800;line-height:1}
+    #teacherCard .tv-stat .l{color:var(--mute);font-size:12.5px;margin-top:4px}
+    #teacherCard .tv-stat.good .n{color:#3fb27a}
+    #teacherCard .tv-stat.warn .n{color:var(--gold)}
+    #teacherCard .tv-stat.crit .n{color:#e0555f}
+    #teacherCard .tv-row{border-top:1px solid var(--line);padding:12px 0}
+    #teacherCard .tv-who{display:flex;align-items:center;gap:10px}
+    #teacherCard .tv-av{width:34px;height:34px;border-radius:50%;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+    #teacherCard .tv-nm{font-weight:700;font-size:14.5px}
+    #teacherCard .tv-cur{color:var(--mute);font-size:12.5px}
+    #teacherCard .tv-track{display:flex;gap:2px;margin:8px 0 4px}
+    #teacherCard .tv-seg{flex:1;height:12px;border-radius:2px;background:var(--panel2);border:1px solid var(--line)}
+    #teacherCard .tv-seg.done{background:#3fb27a;border-color:#3fb27a}
+    #teacherCard .tv-seg.cur.on{background:#3fb27a;border-color:#3fb27a}
+    #teacherCard .tv-seg.cur.warn{background:var(--gold);border-color:var(--gold)}
+    #teacherCard .tv-seg.cur.crit{background:#e0555f;border-color:#e0555f}
+    #teacherCard .tv-cap{color:var(--mute);font-size:12px}
+    #teacherCard .tv-badge{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;margin-top:6px}
+    #teacherCard .tv-badge.on{background:#16351f;color:#5fd39a}
+    #teacherCard .tv-badge.warn{background:#33290f;color:var(--gold)}
+    #teacherCard .tv-badge.crit{background:#3a1518;color:#f08a90}
+    #teacherCard .tv-alert{color:#f08a90;font-size:12.5px;margin-top:4px}
+  </style>
+  <div class="card" id="teacherCard">
+    <div class="q-meta"><span class="stepkick">TEACHER VIEW</span><span class="pill">what YOU see</span></div>
+    <h2>The teacher's dashboard</h2>
+    <p class="lead">Same app, the teacher's side. Every student is self-paced &mdash; you see who's moving and who's stuck, no chasing. A simple test allows 2 days, a complex one 4; past that they turn red and get a nudge (so do you).</p>
+    <div class="tv-stats" id="tvStats"></div>
+    <div id="tvRoster"></div>
+  </div>
+
+  <script>
+  (function(){
+    var TOTAL=20;
+    var students=[
+      {nm:"Emma Wilson",cur:18,day:1,lim:4,c:"#6c8cff"},
+      {nm:"Aaliyah Brooks",cur:15,day:3,lim:4,c:"#e07b53"},
+      {nm:"Maria Chen",cur:12,day:1,lim:2,c:"#1f9d6b"},
+      {nm:"Sofia Patel",cur:10,day:2,lim:2,c:"#b45fd0"},
+      {nm:"Diego Martinez",cur:8,day:2,lim:4,c:"#2a9db8"},
+      {nm:"Tyler Nguyen",cur:6,day:5,lim:4,c:"#d0a53f"},
+      {nm:"Marcus Lee",cur:4,day:1,lim:2,c:"#5aa84f"},
+      {nm:"Josh Ramirez",cur:4,day:6,lim:4,c:"#cf3742"}
+    ];
+    function st(s){ if(s.day>s.lim)return'crit'; if(s.day>=s.lim)return'warn'; if(s.day===s.lim-1&&s.lim===2)return'warn'; return'on'; }
+    function ini(n){return n.split(' ').map(function(w){return w[0];}).join('').slice(0,2);}
+    var c={on:0,warn:0,crit:0}; students.forEach(function(s){c[st(s)]++;});
+    var stEl=document.getElementById('tvStats');
+    if(stEl) stEl.innerHTML=
+      '<div class="tv-stat"><div class="n">'+students.length+'</div><div class="l">Students</div></div>'+
+      '<div class="tv-stat good"><div class="n">'+c.on+'</div><div class="l">On pace</div></div>'+
+      '<div class="tv-stat warn"><div class="n">'+c.warn+'</div><div class="l">Approaching limit</div></div>'+
+      '<div class="tv-stat crit"><div class="n">'+c.crit+'</div><div class="l">Over limit &mdash; nudge sent</div></div>';
+    var ros=document.getElementById('tvRoster');
+    if(ros) ros.innerHTML=students.map(function(s){
+      var s2=st(s), segs='';
+      for(var i=1;i<=TOTAL;i++){ var cl='tv-seg'; if(i<s.cur)cl+=' done'; else if(i===s.cur)cl+=' cur '+s2; segs+='<span class="'+cl+'"></span>'; }
+      var badge = s2==='crit'?'<span class="tv-badge crit">● Over limit</span>' : s2==='warn'?'<span class="tv-badge warn">● Day '+s.day+' of '+s.lim+'</span>' : '<span class="tv-badge on">● On pace</span>';
+      var alert = s2==='crit'?'<div class="tv-alert">⚠ '+s.day+' days on Test '+s.cur+' — time to move on</div>':'';
+      return '<div class="tv-row"><div class="tv-who"><div class="tv-av" style="background:'+s.c+'">'+ini(s.nm)+'</div>'+
+        '<div><div class="tv-nm">'+s.nm+'</div><div class="tv-cur">Test '+s.cur+' of '+TOTAL+'</div></div></div>'+
+        '<div class="tv-track">'+segs+'</div>'+
+        '<div class="tv-cap">'+(s.cur-1)+' tests complete · on Test '+s.cur+' for '+s.day+' day'+(s.day>1?'s':'')+'</div>'+
+        badge+alert+'</div>';
+    }).join('');
+  })();
+  </script>
+
   <!-- WORK WITH US -->
   <div class="card" id="contactCard">
     <div class="q-meta"><span class="stepkick">WORK WITH US</span><span class="pill">Studio Beltran</span></div>
