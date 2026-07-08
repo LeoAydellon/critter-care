@@ -201,6 +201,44 @@
 </nav>
 <div id="modalHost"></div>
 
+<!-- ===== Tend cloud sync (Firebase Firestore, free/no-card). Fail-open: if this
+     can't load, the app keeps working 100% locally exactly as before. ===== -->
+<script>
+  // A promise the main app awaits; resolves to the cloud API, or null if Firebase
+  // never loads (offline / blocked). 7s timeout so the app NEVER hangs.
+  window.__tendCloudReady = new Promise(function(r){ window.__tendCloudResolve = r; });
+  setTimeout(function(){ if(window.__tendCloudResolve){ window.__tendCloudResolve(null); window.__tendCloudResolve=null; } }, 7000);
+</script>
+<script type="module">
+  try {
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    const { getFirestore, doc, getDoc, setDoc, onSnapshot } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const firebaseConfig = {
+      apiKey: "AIzaSyDProgn2Yl5pqyBgkgb3bm_id0pB8tpCl8",
+      authDomain: "tend-app-e9135.firebaseapp.com",
+      projectId: "tend-app-e9135",
+      storageBucket: "tend-app-e9135.firebasestorage.app",
+      messagingSenderId: "256016468538",
+      appId: "1:256016468538:web:850dffa917cdc3de360303"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    // farm id lives in the URL (?farm=xxx). No farm → make a new one and put it in the URL.
+    const u = new URL(location.href);
+    let fid = u.searchParams.get('farm');
+    if(!fid){ fid = 'farm-' + Math.random().toString(36).slice(2,9); u.searchParams.set('farm', fid); history.replaceState(null,'',u); }
+    const sane = function(s){ return String(s).replace(/[^a-zA-Z0-9-]/g,'_'); };
+    window.__tendCloud = {
+      farmId: fid, db: db, getDoc: getDoc, setDoc: setDoc, onSnapshot: onSnapshot,
+      farmRef: function(){ return doc(db,'farms',fid); },
+      dayRef:  function(k){ return doc(db,'farms',fid,'days',sane(k)); }
+    };
+    if(window.__tendCloudResolve){ window.__tendCloudResolve(window.__tendCloud); window.__tendCloudResolve=null; }
+  } catch(e){
+    if(window.__tendCloudResolve){ window.__tendCloudResolve(null); window.__tendCloudResolve=null; }
+  }
+</script>
+
 <script>
 (function(){
   // ================= data model =================
@@ -291,13 +329,18 @@
     t.onsuccess=function(){res(true);};t.onerror=function(){rej(t.error);};}catch(e){rej(e);}});}
   var MODULES=[], state={}, asks={};
   function todayKey(){ return 'day-'+new Date().toDateString(); }
+  // ---- cloud (Firestore) mirror — additive, fail-open. Local storage is still the source of truth on-device. ----
+  var CLOUD=null;
+  function cloudSaveFarm(){ if(!CLOUD)return; try{ CLOUD.setDoc(CLOUD.farmRef(),{modules:MODULES,asks:asks,updatedAt:Date.now()},{merge:true}); }catch(e){} }
+  function cloudSaveDay(){ if(!CLOUD)return; try{ CLOUD.setDoc(CLOUD.dayRef(todayKey()),{state:state,updatedAt:Date.now()}); }catch(e){} }
   function saveModules(){
     if(DB){ idbSet('modules',MODULES).catch(function(){alert('Couldn\'t save — try removing a photo, or use fewer/smaller photos.');}); }
     else { try{ localStorage.setItem(LS_KEY,JSON.stringify(MODULES)); }catch(e){ alert('Couldn\'t save — the phone storage is full. Try fewer/smaller photos.'); } }
+    cloudSaveFarm();
     return true;
   }
-  function saveState(){ if(DB){ idbSet(todayKey(),state).catch(function(){}); } else { try{ localStorage.setItem('cc-'+todayKey(),JSON.stringify(state)); }catch(e){} } }
-  function saveAsks(){ if(DB){ idbSet('asks',asks).catch(function(){}); } else { try{ localStorage.setItem('cc-asks',JSON.stringify(asks)); }catch(e){} } }
+  function saveState(){ if(DB){ idbSet(todayKey(),state).catch(function(){}); } else { try{ localStorage.setItem('cc-'+todayKey(),JSON.stringify(state)); }catch(e){} } cloudSaveDay(); }
+  function saveAsks(){ if(DB){ idbSet('asks',asks).catch(function(){}); } else { try{ localStorage.setItem('cc-asks',JSON.stringify(asks)); }catch(e){} } cloudSaveFarm(); }
   async function boot(){
     try{ DB=await idbOpen(); }catch(e){ DB=null; }
     var m = DB ? await idbGet('modules') : null;
@@ -310,6 +353,32 @@
     if(ak==null){ try{ ak=JSON.parse(localStorage.getItem('cc-asks')||'{}'); }catch(e){ ak={}; } }
     asks=ak||{};
     renderToday();
+    hydrateCloud();  // layer live sync on top of the already-rendered local app
+  }
+  // Pull the shared farm from the cloud (if reachable) and keep it live. Everything guarded — never blocks the app.
+  async function hydrateCloud(){
+    try{ CLOUD = await window.__tendCloudReady; }catch(e){ CLOUD=null; }
+    if(!CLOUD) return;  // offline / blocked → app stays fully local, no error
+    try{
+      var snap = await CLOUD.getDoc(CLOUD.farmRef());
+      if(snap.exists()){
+        var d=snap.data()||{};
+        if(Array.isArray(d.modules)&&d.modules.length){ MODULES=d.modules; if(DB){ try{ idbSet('modules',MODULES); }catch(e){} } }
+        if(d.asks&&typeof d.asks==='object'){ asks=d.asks; if(DB){ try{ idbSet('asks',asks); }catch(e){} } }
+      } else {
+        cloudSaveFarm();   // first time on this farm → seed the cloud from what's on this device
+      }
+      var dsnap = await CLOUD.getDoc(CLOUD.dayRef(todayKey()));
+      if(dsnap.exists() && dsnap.data() && dsnap.data().state){ state=dsnap.data().state; }
+      else { cloudSaveDay(); }
+      renderToday(); if(document.getElementById('view-setup') && document.getElementById('view-setup').offsetParent){ renderSetup(); }
+      // realtime: any phone's change flows to every phone
+      CLOUD.onSnapshot(CLOUD.farmRef(), function(s){ if(!s||!s.exists())return; var d=s.data()||{};
+        if(Array.isArray(d.modules)){ MODULES=d.modules; if(DB){ try{ idbSet('modules',MODULES); }catch(e){} } }
+        if(d.asks&&typeof d.asks==='object'){ asks=d.asks; if(DB){ try{ idbSet('asks',asks); }catch(e){} } }
+        renderToday(); if(document.getElementById('view-setup') && document.getElementById('view-setup').offsetParent){ renderSetup(); } });
+      CLOUD.onSnapshot(CLOUD.dayRef(todayKey()), function(s){ if(!s||!s.exists())return; var d=s.data()||{}; if(d.state){ state=d.state; renderToday(); } });
+    }catch(e){ /* fail-open: keep working locally */ }
   }
 
   // ---- Backup / Restore: your work can never be lost ----
