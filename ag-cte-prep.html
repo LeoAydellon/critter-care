@@ -344,10 +344,14 @@ function draw(stdIdxs, n){
     const tag = si + ':' + qi;
     pool.push({ q, tag, seen: P.seen[tag] || 0, si });
   }));
-  pool = shuffle(pool);
-  pool.sort((a, b) => a.seen - b.seen);
-  const picked = pool.slice(0, Math.min(n, pool.length));
-  return shuffle(picked);
+  const isBonus = p => p.q && p.q.bonus;
+  const bonus = pool.filter(isBonus);
+  let rest = shuffle(pool.filter(p => !isBonus(p)));
+  rest.sort((a, b) => a.seen - b.seen);
+  let picked = shuffle(rest.slice(0, Math.min(n, rest.length)));
+  /* A flagged bonus question always shows, at the END, on a single-standard quiz. */
+  if (stdIdxs.length === 1) picked = picked.concat(bonus);
+  return picked;
 }
 
 /* ================= MAP ================= */
@@ -696,7 +700,7 @@ $('switchBtn').onclick = () => {
           var std = STANDARDS.filter(function(s){ return s.id === sid; })[0]
                  || STANDARDS.filter(function(s){ return s.id === sid + '.0'; })[0];
           if(!std) return;
-          std.questions.push({ q:q, options:opts, answer:ans, why:String(it.why||''), art:(it.art?String(it.art):''), noShuffle: it.noShuffle===true });
+          std.questions.push({ q:q, options:opts, answer:ans, why:String(it.why||''), art:(it.art?String(it.art):''), noShuffle: it.noShuffle===true, bonus: it.bonus===true });
         });
       })
       .catch(function(){});
