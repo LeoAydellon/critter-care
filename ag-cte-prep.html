@@ -366,7 +366,7 @@ function renderMap(){
 
   let h = '', group = -1;
   TRACK.forEach((t, i) => {
-    const k = keyOf(t), done = !!P.passed[k], locked = i > upto, next = i === upto;
+    const k = keyOf(t), done = !!P.passed[k], locked = false /* open-all: a student whose progress resets must still be able to reach where they actually are */, next = i === upto;
     if (t.kind === 'std'){
       const g = Math.floor(t.idx / CK_EVERY);
       if (g !== group){
