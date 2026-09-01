@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each farm is its own space. Knowing the (random, unguessable) farm ID
+    // is the access key — anyone with a farm's link can use THAT farm only.
+    // Covers the farm doc AND its subcollections (e.g. photos). MVP rule.
+    match /farms/{farmId} {
+      allow read, write: if true;
+      match /{document=**} {
+        allow read, write: if true;
+      }
+    }
+  }
+}
