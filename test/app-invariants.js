@@ -201,7 +201,22 @@ check('T12 the start/name controls the student first touches are present', () =>
   return missing.length ? 'missing element id(s): ' + missing.join(', ') : null;
 });
 
-check('T13 no leftover debugger or TODO-blocking marker ships', () => {
+check('T13 the version is stamped, and all three copies agree', () => {
+  // The version is how Leo knows a change actually reached students. It is
+  // useless if the three places can disagree, so this enforces one truth.
+  const t = src.match(/<title>Ag CTE Prep — Verde Tech ([0-9]+\.[0-9]+)<\/title>/);
+  const h = src.match(/id="appVer">([0-9]+\.[0-9]+)</);
+  const c = src.match(/const APP_VERSION = '([0-9]+\.[0-9]+)'/);
+  if (!t) return 'no version in <title> — the browser tab will not show it';
+  if (!h) return 'no version in the on-screen header — Leo cannot see it in class';
+  if (!c) return 'no APP_VERSION constant in the script';
+  if (t[1] !== h[1] || h[1] !== c[1])
+    return `versions disagree: title ${t[1]}, header ${h[1]}, script ${c[1]}. `
+         + 'Use: node test/bump-version.js <version>';
+  return null;
+});
+
+check('T14 no leftover debugger or TODO-blocking marker ships', () => {
   if (/\bdebugger\b/.test(src)) return 'a `debugger` statement would freeze the app for students';
   return null;
 });
@@ -229,7 +244,18 @@ async function liveCheck() {
   check('L04 the deployed app does not re-introduce the lock', () =>
     /locked\s*=\s*i\s*>\s*upto/.test(body)
       ? 'the LIVE site traps students at item 1 — the Noah regression is back' : null);
-  check('L05 deployed matches what is committed here', () => {
+  check('L05 the DEPLOYED version matches the committed version', () => {
+    // This is the check that answers "did my change actually go live?"
+    const live = body.match(/<title>Ag CTE Prep — Verde Tech ([0-9]+\.[0-9]+)<\/title>/);
+    const here = src.match(/<title>Ag CTE Prep — Verde Tech ([0-9]+\.[0-9]+)<\/title>/);
+    if (!live) return 'the deployed site has no version in its title';
+    console.log('      live version: ' + live[1] + '   committed: ' + (here ? here[1] : '?'));
+    if (here && live[1] !== here[1])
+      return `deployed is v${live[1]} but this commit is v${here[1]} — the change has NOT reached students`;
+    return null;
+  });
+
+  check('L06 deployed matches what is committed here', () => {
     const drift = Math.abs(body.length - src.length);
     return drift > 2000
       ? `live and local differ by ${drift} bytes — something was edited but never pushed`
