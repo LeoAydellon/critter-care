@@ -205,7 +205,7 @@ check('T13 the version is stamped, and all three copies agree', () => {
   // The version is how Leo knows a change actually reached students. It is
   // useless if the three places can disagree, so this enforces one truth.
   const t = src.match(/<title>Ag CTE Prep — Verde Tech ([0-9]+\.[0-9]+)<\/title>/);
-  const h = src.match(/id="appVer">([0-9]+\.[0-9]+)</);
+  const h = src.match(/id="appVerTop">([0-9]+\.[0-9]+)</);
   const c = src.match(/const APP_VERSION = '([0-9]+\.[0-9]+)'/);
   if (!t) return 'no version in <title> — the browser tab will not show it';
   if (!h) return 'no version in the on-screen header — Leo cannot see it in class';

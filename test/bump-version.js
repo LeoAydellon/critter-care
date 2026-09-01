@@ -19,7 +19,7 @@ const APP = path.join(__dirname, '..', 'ag-cte-prep.html');
 
 const RX = {
   title:  /<title>Ag CTE Prep — Verde Tech ([0-9]+\.[0-9]+)<\/title>/,
-  header: /id="appVer">([0-9]+\.[0-9]+)</,
+  header: /id="appVerTop">([0-9]+\.[0-9]+)</,
   script: /const APP_VERSION = '([0-9]+\.[0-9]+)'/,
 };
 
@@ -63,7 +63,8 @@ if (next === current) { console.log('already at ' + next); process.exit(0); }
 
 src = src
   .replace(RX.title,  `<title>Ag CTE Prep — Verde Tech ${next}</title>`)
-  .replace(RX.header, `id="appVer">${next}<`)
+  .replace(RX.header, `id="appVerTop">${next}<`)
+  .replace(/id="appVerGate">[0-9]+\.[0-9]+</, `id="appVerGate">${next}<`)
   .replace(RX.script, `const APP_VERSION = '${next}'`);
 
 fs.writeFileSync(APP, src);
