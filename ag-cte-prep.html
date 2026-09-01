@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ag CTE Prep — Verde Tech 1.1</title>
+<title>Ag CTE Prep — Verde Tech 1.2</title>
 <meta name="theme-color" content="#2f6b3f">
 <style>
   :root{
@@ -153,13 +153,33 @@
 </style>
 </head>
 <body>
+<script>
+/* CACHE BUSTER -- runs before anything else.
+ * GitHub Pages sends cache-control: max-age=600, so a browser will happily
+ * serve a ten-minute-old copy of this file and IGNORE the refresh button.
+ * That is why "I pushed it but the Chromebook still shows the old one" kept
+ * happening.
+ * Fix: if the address has no ?t= stamp, reload once with a fresh one. That URL
+ * has never been seen, so the cache cannot answer it and the browser must ask
+ * the server. One automatic hop, then it stops -- the guard below prevents a
+ * loop. Costs nothing after the first load. */
+(function(){
+  try{
+    var u = new URL(location.href);
+    if(!u.searchParams.get('t')){
+      u.searchParams.set('t', Date.now());
+      location.replace(u.toString());
+    }
+  }catch(e){ /* never block the app if this fails */ }
+})();
+</script>
 <script>window.__vclass=function(){try{var u=new URLSearchParams(location.search),c=u.get('c');if(c){localStorage.setItem('verde_class',c);return c;}return localStorage.getItem('verde_class')||'';}catch(e){return '';}};</script>
 
 <header>
   <div class="hrow">
     <button class="back hide" id="backBtn">‹ Back</button>
     <div style="flex:1;min-width:0">
-      <div class="htitle" id="hTitle">Ag CTE Prep <span id="appVerTop">1.1</span></div>
+      <div class="htitle" id="hTitle">Ag CTE Prep <span id="appVerTop">1.2</span></div>
       <div class="hsub" id="hSub">Arizona AgriScience · 01.0000.00</div>
     </div>
     <button class="who hide" id="whoBtn"></button>
@@ -171,7 +191,7 @@
   <!-- ============ NAME GATE ============ -->
   <section id="gate">
     <div class="card">
-      <h2>Ag CTE Prep <span id="appVerGate">1.1</span></h2>
+      <h2>Ag CTE Prep <span id="appVerGate">1.2</span></h2>
       <div class="muted">Learn it, then prove it. Sixteen standards — the same ones on the
         state Technical Skills Assessment.</div>
       <input id="nameIn" placeholder="Type your name" autocomplete="off"
@@ -287,7 +307,7 @@ function range(a,b){const o=[];for(let i=a;i<=b;i++)o.push(i);return o;}
 function keyOf(t){ return t.kind==='std' ? 's'+t.id : t.kind==='ck' ? 'ck'+t.ckNo : 'final'; }
 
 /* ================= STATE ================= */
-const APP_VERSION = '1.1';   // bump with: node test/bump-version.js <new>
+const APP_VERSION = '1.2';   // bump with: node test/bump-version.js <new>
 const LS = 'agprep.v1';
 let student = '';
 let P = null;          // progress for the current student
